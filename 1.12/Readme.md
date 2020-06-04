@@ -1,6 +1,8 @@
 # BlockedInCombat 1.12
-This is a resumption of the blockedincombat map of PingPuck but in Minecraft plugin 1.12 :p
+This is a resumption of the blockedincombat map of PingiPuck but in Minecraft plugin 1.12 :p
 
+PingiPuck: https://www.youtube.com/channel/UCsPROTnobYilDKby1Ptln2w/videos
+https://www.planetminecraft.com/member/pingipuck/
 Default Map : https://www.planetminecraft.com/project/random-blocks-survivalpvp-minigame/
 
 bStats: https://bstats.org/plugin/bukkit/blockedincombat/7741
