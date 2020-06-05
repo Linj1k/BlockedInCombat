@@ -1,0 +1,101 @@
+plugin:
+  initialization: "initialization in progress..."
+  disable: "BlockedInCombat is Disable !"
+  version_not_supported: "The server version is not supported! (Minimum 1.12)"
+  description: "\n &bBlocked In Combat &ris a combat arena consisting completely of &brandom blocks. &rYour objective is to &bkill &rall players on the enemy teams using resources you can gather from the arena. \n\n Make sure to quickly craft weapons, armor, and maybe even try some enchanting while &balways being prepared &rto take on enemies trying to kill you."
+  joinmsg: "{player} has joined!"
+  leavemsg: "{player} has left!"
+  lobby_item: "&aLobby!"
+  date_format: "yyyy-MM-dd" #https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+  timer_format: "mm:ss" #https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+  no_permission: "You don't have the permissions to do this!"
+
+config:
+  activated: "Activated"
+  disabled: "Disabled"
+
+  gui:
+    item_back: "Back"
+    settings:
+      name: "Settings"
+      item: "&b- Settings -"
+      tabhealth: "TabHealth"
+      bonuschest: "BonusChest"
+      autosmelt: "AutoSmelt"
+      autosmelt_fortune: "AutoSmeltFortune"
+      friendlyfire: "FriendlyFire"
+      uhcmode: "UHCMode"
+      expmultiplier: "ExpMultiplier"
+      randomteam: "RandomTeam"
+
+    timers:
+      name: "Settings (Timers)"
+      item: "Timers"
+      game_time: "GameTime"
+      combat_time: "CombatTime"
+      glowing_time: "GlowingTime"
+
+    blocks:
+      name: "Settings (Blocks)"
+      item: "Blocks"
+
+    items:
+      name: "Settings (Items)"
+      item: "Items"
+
+    configs:
+      name: "Settings (Profiles)"
+      item: "Profiles"
+      save_profile: "Save Profile"
+
+    configs_choice:
+      name: "Profiles (Choice)"
+      replace: "Replace"
+      delete: "Delete"
+
+chat:
+  global: "&r[&7Global&r]"
+  team: "&r[{teamcolor}Team&r]"
+  spectator: "&r[&7SPECTATOR&r]"
+
+commands:
+  canbuild:
+    activated: "You can now build!"
+    disabled: "You can no longer build!"
+
+gamestate:
+  leave_area: "You've gone too far!"
+  game_start: "&6The game starts in &e{time}&6s"
+  game_started_cancel: "\nThe game has been started. Click here to cancel the game."
+  pvp_activate: "PVP is activated!"
+  glowing_activate: "Everyone gets a glowing effect!"
+  pvp_is_not_yet_activated: "The PVP is not yet activated!"
+  friendlyfire_deactivated: "FriendlyFire is deactivated!"
+
+finish:
+  equality: "&6!!! EQUALITY !!!"
+  teams: "&6!!! TEAM {team} WIN §6!!!"
+  cancel: "&4!!! The game has been canceled !!!"
+  noplayers: "§4!!! Not enough players !!!"
+
+teams:
+  blue: "Blue"
+  red: "Red"
+  yellow: "Yellow"
+  green: "Green"
+  spectator: "Spectator"
+
+  joinmsg: "{player} &6joined team {team} !"
+  item: "Join {team}"
+
+scoreboard:
+  time: "&7Time: &6{time}"
+  players: "&7Players: &6{players}/{maxplayers}"
+  pvp: "&7PVP: &6{time}"
+  glowing: "&7Glowing: &6{time}"
+  team: "&7Team: &6{team}"
+  ip: "&eyour-ip"
+
+support:
+  bungeecord:
+    redirected: "You are redirected to {servername}"

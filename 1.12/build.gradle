@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+}
+
+group 'fr.kinj14.blockedincombat'
+version '1.0.1'
+archivesBaseName = "BlockedInCombat"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        url = uri('https://jitpack.io')
+    }
+}
+
+dependencies {
+    implementation group: 'org.spigotmc', name: 'spigot', version: '1.12.2-R0.1-SNAPSHOT', changing: true
+    compile group: 'com.github.WesJD', name: 'AnvilGUI', version: 'master-SNAPSHOT'
+    compile group: 'org.json', name: 'json', version: '20200518'
+}
+
+//create a single Jar with all dependencies
+task buildall(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'BlockedInCombat',
+                'Implementation-Version': version,
+                'Main-Class': 'fr.kinj14.blockedincombat.Main'
+    }
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

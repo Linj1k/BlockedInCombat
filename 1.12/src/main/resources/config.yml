@@ -1,0 +1,16 @@
+General:
+  WorldName: "blockedincombat"
+  UsebStats: true # true = activates the statistics system
+  CheckUpdate: true # true = activates the checkUpdate system
+  NoChatFlood: true # true = No chat Flood
+  ChatFormat: "{DisplayName}: {Message}" #{DisplayName}, {PlayerName}, {Level}, {Health}, {Food}, {MaxHealth}, {CustomName}, {Gamemode}, {Locale}, {PlayerListName}, {World}, {Message}
+  ArenaDelay: true # true = Activate progressive arena generation
+  PingInTab: false # true = see ping in the tab
+  UpdatePing: 3 # > 0 | Must be greater than 0 to avoid bugs
+
+Locations:
+  Lobby: 47.5, 8, 79.5, 180f, -13.9f # The location of your lobby (XYZ
+
+BungeeCord:
+  Support: false #true = Your server is on a bungeecord proxy
+  Server: "lobby1" #server name of your bungeecord hub

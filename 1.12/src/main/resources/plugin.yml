@@ -1,0 +1,37 @@
+name: BlockedInCombat
+version: 1.0
+author: kinj14
+main: fr.kinj14.blockedincombat.Main
+api-version: 1.12
+website: https://orerun.ovh
+commands:
+  blockedincombat.arena:
+    description: regenerate the arena or the clear.
+    permission: blockedincombat.Arena
+    usage: "Usage: /arena build/clear"
+    aliases:
+      - a
+      - arena
+  blockedincombat.cancel:
+    description: cancel the start
+    permission: blockedincombat.ChangeSettings
+    aliases:
+      - cancel
+  blockedincombat.canbuild:
+    description: build or destroy blocks even when the game hasn't started
+    permission: blockedincombat.canbuild
+    usage: "Usage: /canbuild"
+    aliases:
+      - b
+      - canbuild
+permissions:
+  blockedincombat.*:
+    description: Gives access to *
+  blockedincombat.ChangeSettings:
+    description: Gives access to ChangeSettings
+  blockedincombat.LoadProfiles:
+    description: Gives access to Load Profiles
+  blockedincombat.SaveProfiles:
+    description: Gives access to Save Profiles
+  blockedincombat.EditProfiles:
+    description: Gives access to Edit Profiles
