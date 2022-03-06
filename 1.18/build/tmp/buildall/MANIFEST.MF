@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Implementation-Title: BlockedInCombat
+Implementation-Version: 1.0.2
+Main-Class: fr.kinj14.blockedincombat.Main
+
