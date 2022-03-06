@@ -13,7 +13,7 @@ Links:
 
 ![](https://github.com/Linj1k/BlockedInCombat/blob/master/bic.png?raw=true)
 
-# Library List
+# Libraries
   - WesJD: [AnvilGUI](https://github.com/WesJD/AnvilGUI/tree/master)
   - MrMicky-FR: [Scoreboard](https://github.com/MrMicky-FR/FastBoard)
   - stleary: [JSON-java](https://github.com/stleary/JSON-java)
