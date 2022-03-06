@@ -1,6 +1,11 @@
 # BlockedInCombat
 This is a resumption of the blockedincombat map of PingiPuck but in Minecraft plugin :p
 
+```
+The next step would be to support from 1.8 to 1.18,
+if you think you can help me don't hesitate to make pull requests
+```
+
 PingiPuck: 
   - https://www.youtube.com/c/PingiPuck
   - https://www.planetminecraft.com/member/pingipuck/
