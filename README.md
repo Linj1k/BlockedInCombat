@@ -6,8 +6,11 @@ PingiPuck:
   - https://www.planetminecraft.com/member/pingipuck/
   - https://www.planetminecraft.com/project/random-blocks-survivalpvp-minigame/
 
-- Map:https://github.com/Linj1k/BlockedInCombat/blob/master/world.rar
-- bStats: https://bstats.org/plugin/bukkit/blockedincombat/7741
+Links:
+  - Map:https://github.com/Linj1k/BlockedInCombat/blob/master/world.rar
+  - bStats: https://bstats.org/plugin/bukkit/blockedincombat/7741
+
+![](https://github.com/Linj1k/BlockedInCombat/blob/master/bic.png?raw=true)
 
 # Library List
   - WesJD [AnvilGUI](https://github.com/WesJD/AnvilGUI/tree/master)
