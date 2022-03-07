@@ -7,6 +7,7 @@ if you think you can help me don't hesitate to make pull requests
 
 07/03/2022: I tested from 1.13 to 1.18 and everything works!
 ```
+Information for devs: [Wiki](https://github.com/Linj1k/BlockedInCombat/wiki/For-Dev)
 
 PingiPuck: 
   - https://www.youtube.com/c/PingiPuck
