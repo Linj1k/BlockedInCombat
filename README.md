@@ -11,7 +11,6 @@ Information for devs: [Wiki](https://github.com/Linj1k/BlockedInCombat/wiki/For-
 
 PingiPuck: 
   - https://www.youtube.com/c/PingiPuck
-  - https://www.planetminecraft.com/member/pingipuck/
   - https://www.planetminecraft.com/project/random-blocks-survivalpvp-minigame/
 
 Links:
