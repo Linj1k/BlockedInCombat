@@ -4,6 +4,8 @@ This is a resumption of the blockedincombat map of PingiPuck but in Minecraft pl
 ```
 The next step would be to support from 1.8 to 1.18,
 if you think you can help me don't hesitate to make pull requests
+
+07/03/2022: I tested from 1.13 to 1.18 and everything works!
 ```
 
 PingiPuck: 
