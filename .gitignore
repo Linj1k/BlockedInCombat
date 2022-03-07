@@ -1,1 +1,5 @@
-/.metadata/
+/.metadata
+bin
+build
+.gradle
+.idea
