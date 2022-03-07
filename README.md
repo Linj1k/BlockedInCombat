@@ -18,7 +18,7 @@ Links:
   - Map: https://github.com/Linj1k/BlockedInCombat/blob/master/world.rar
   - bStats: https://bstats.org/plugin/bukkit/blockedincombat/7741
 
-![](/bic.png)
+[![](/bic.png)](https://www.spigotmc.org/resources/blockedincombat.79717/)
 
 # Libraries
   - WesJD: [AnvilGUI](https://github.com/WesJD/AnvilGUI/tree/master)
