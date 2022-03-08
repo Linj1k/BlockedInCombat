@@ -41,22 +41,22 @@ public enum Files {
 
     public void create(){
         if(fileName == null || fileName.isEmpty()){
-            throw new IllegalArgumentException("["+Main.getInstance().getPrefixDefault()+"] ResourcePath cannot be null or empty!");
+            throw new IllegalArgumentException(main.getPrefix(true)+" ResourcePath cannot be null or empty!");
         }
 
         InputStream in = main.getResource(fileName);
         if(in == null){
-            throw new IllegalArgumentException("["+Main.getInstance().getPrefixDefault()+"] The resource '"+fileName+"' cannot be found in plugin jar!");
+            throw new IllegalArgumentException(main.getPrefix(true)+" The resource '"+fileName+"' cannot be found in plugin jar!");
         }
 
         if(!dataFolder.exists() && !dataFolder.mkdir()){
-            main.logger.severe("["+Main.getInstance().getPrefixDefault()+"] Failed to make plugin directory!");
+            main.logger.severe(main.getPrefix(true)+" Failed to make plugin directory!");
         }
 
         File outFile = getFile();
         try{
             if(!outFile.exists()){
-                main.logger.info("["+Main.getInstance().getPrefixDefault()+"] The "+fileName+" was not found, creation in progress ...");
+                main.logger.info(main.getPrefix(true)+" The "+fileName+" was not found, creation in progress ...");
 
                 OutputStream out = new FileOutputStream(outFile);
                 byte[] buf = new byte[1024];
@@ -70,7 +70,7 @@ public enum Files {
                 in.close();
 
                 if(!outFile.exists()){
-                    main.logger.severe("["+Main.getInstance().getPrefixDefault()+"] Unable to copy file !");
+                    main.logger.severe(main.getPrefix(true)+" Unable to copy file !");
                 }
             }
         } catch (IOException e){

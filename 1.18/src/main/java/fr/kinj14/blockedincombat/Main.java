@@ -29,10 +29,11 @@ public class Main extends JavaPlugin {
     }
 
     // Spigot Information
-    public String version = "1.0.2";
+    public String version = "1.0.3";
+    public Version minVersion = Version.v1_13_R1;
     public String resourceID = "79717";
 
-    public Version minVersion = ServerVersion.Version.v1_18_R1;
+    public int bStatsID = 7741;
 
     //Manager
     private ConfigManager ConfigManager;
@@ -45,6 +46,7 @@ public class Main extends JavaPlugin {
     private BlacklistBlockManager blacklistBlockManager;
     private GUIManager guiManager;
 
+    // Config.yml Values
     public boolean devmode = false;
     public GameState Game_State;
     public String WorldName;
@@ -52,8 +54,8 @@ public class Main extends JavaPlugin {
     public Location lobby;
     public boolean BungeeCord = false;
     public String BungeeCord_Server = "";
-    private List<BukkitRunnable> Timers = new ArrayList<>();
-    private List<Player> PlayersBuild = new ArrayList<>();
+    private final List<BukkitRunnable> Timers = new ArrayList<>();
+    private final List<Player> PlayersBuild = new ArrayList<>();
     public Location ArenaLoc;
 
     @Override
@@ -66,11 +68,9 @@ public class Main extends JavaPlugin {
         Files lang = Files.LANG;
         lang.create();
 
-        logger.info("============["+getPrefixDefault()+"]============");
-        logger.info(Lang.PLUGIN_INITIALIZATION.get());
+        logger.info(getPrefix(true)+Lang.PLUGIN_INITIALIZATION.get());
         if(ServerVersion.Version.isCurrentLower(minVersion)){
-            logger.severe(Lang.PLUGIN_VERSIONNOTSUPPORTED.get());
-            logger.info("===================================================");
+            logger.severe(getPrefix(true)+Lang.PLUGIN_VERSIONNOTSUPPORTED.get().replace("{version}",minVersion.toString()));
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -80,14 +80,13 @@ public class Main extends JavaPlugin {
         ConfigManager = new ConfigManager();
 
         if(ConfigManager.getBooleanConfig("General.UsebStats")){
-            Metrics metrics = new Metrics(this, 7741);
+            new Metrics(this, bStatsID);
         }
         if(ConfigManager.getBooleanConfig("General.CheckUpdate")){
             if(ConfigManager.checkForUpdate()){
-                logger.info("The plugin is not up to date! ("+ConfigManager.getDownloadVersion()+")");
+                logger.info(getPrefix(true)+"The plugin is not up to date! ("+ConfigManager.getDownloadVersion()+")");
             }
         }
-
 
         devmode = ConfigManager.getBooleanConfig("General.devmode");
         WorldName = ConfigManager.getStringConfig("General.WorldName");
@@ -101,7 +100,7 @@ public class Main extends JavaPlugin {
         }
         TeamsManager = new TeamsManager();
         itemsManager = new ItemsManager();
-        scoreboardManager = new fr.kinj14.blockedincombat.Manager.ScoreboardManager();
+        scoreboardManager = new ScoreboardManager();
         settingsManager = new SettingsManager();
         arenaManager = new ArenaManager();
         blacklistBlockManager = new BlacklistBlockManager();
@@ -116,14 +115,18 @@ public class Main extends JavaPlugin {
 
         //Setup World
         World w = Bukkit.getWorld(WorldName);
-        w.setGameRule(org.bukkit.GameRule.NATURAL_REGENERATION, true);
-        w.setGameRule(org.bukkit.GameRule.DO_DAYLIGHT_CYCLE, false);
-        w.setGameRule(org.bukkit.GameRule.DO_MOB_SPAWNING, false);
-        w.setGameRule(org.bukkit.GameRule.MOB_GRIEFING, false);
-        w.setTime(6000L);
-        w.setDifficulty(Difficulty.NORMAL);
-        w.setWeatherDuration(999999999);
-        w.setSpawnLocation(lobby);
+        if(w != null){
+            w.setGameRule(GameRule.NATURAL_REGENERATION, true);
+            w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            w.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            w.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            w.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
+            w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            w.setTime(6000L);
+            w.setDifficulty(Difficulty.NORMAL);
+            w.setWeatherDuration(999999999);
+            w.setSpawnLocation(lobby);
+        }
 
         ArenaLoc = new Location(Bukkit.getWorld(WorldName), 1040, 30, 1040);
         arenaManager.setupArena();
@@ -131,6 +134,7 @@ public class Main extends JavaPlugin {
 
         ReturnLobby();
 
+        // Ping In Tab
         if(getConfigManager().getBooleanConfig("General.PingInTab")){
             int UpdatePingDelay = getConfigManager().getIntConfig("UpdatePing");
             if(UpdatePingDelay <= 0){
@@ -138,10 +142,8 @@ public class Main extends JavaPlugin {
             }
             Loop LoopRunnable = new Loop();
             Timers.add(LoopRunnable);
-            LoopRunnable.runTaskTimer(this, 0, UpdatePingDelay*20);
+            LoopRunnable.runTaskTimer(this, 0, (long)UpdatePingDelay*20);
         }
-
-        logger.info("===================================================");
     }
 
     @Override
@@ -165,7 +167,8 @@ public class Main extends JavaPlugin {
 
     public String getPrefixDefault(){return "BlockedInCombat";}
 
-    public String getPrefix(){return "§7[§eBlockedInCombat§7] §r";}
+    public String getPrefix(boolean noColor){return "["+getPrefixDefault()+"]";}
+    public String getPrefix(){return "§7[§e"+getPrefixDefault()+"§7] §r";}
 
     public ConfigManager getConfigManager() {
         return ConfigManager;
@@ -212,9 +215,9 @@ public class Main extends JavaPlugin {
             run.cancel();
         }
 
+        String TimerDate = new SimpleDateFormat("mm:ss").format(0);
         for(Player player : Bukkit.getOnlinePlayers()) {
-            String timerdate = new SimpleDateFormat("mm:ss").format(0);
-            getScoreboardManager().updateTime(player, timerdate);
+            getScoreboardManager().updateTime(player, TimerDate);
             player.setLevel(0);
         }
         Timers.clear();
@@ -262,9 +265,7 @@ public class Main extends JavaPlugin {
                 }
             }
 
-            Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-                getArenaManager().buildArena();
-            }, 20L);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> getArenaManager().buildArena(), 20L);
         } else {
             GameState.setState(GameState.WAITING);
         }
@@ -368,7 +369,6 @@ public class Main extends JavaPlugin {
 
         if(getTeamsManager().getValidTeams().size() == 0){
             FinishGame(FinishType.EQUALITY);
-            return;
         }
     }
 

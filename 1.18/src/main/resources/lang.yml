@@ -1,7 +1,7 @@
 plugin:
   initialization: "initialization in progress..."
   disable: "BlockedInCombat is Disable !"
-  versionnotsupported: "The server version is not supported! (Minimum 1.12)"
+  versionnotsupported: "The server version is not supported! (Minimum {version}})"
   description: "\n &bBlocked In Combat &ris a combat arena consisting completely of &brandom blocks. &rYour objective is to &bkill &rall players on the enemy teams using resources you can gather from the arena. \n\n Make sure to quickly craft weapons, armor, and maybe even try some enchanting while &balways being prepared &rto take on enemies trying to kill you."
   joinmsg: "{player} has joined!"
   leavemsg: "{player} has left!"

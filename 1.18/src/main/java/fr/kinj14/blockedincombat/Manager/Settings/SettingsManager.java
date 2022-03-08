@@ -8,6 +8,7 @@ import fr.kinj14.blockedincombat.Enums.Lang;
 import fr.kinj14.blockedincombat.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -86,7 +87,7 @@ public class SettingsManager {
     public void setUHCMode(boolean UHCMode) {
         getConfig().setUHCMode(UHCMode);
 
-        Bukkit.getWorld(main.WorldName).setGameRuleValue("naturalRegeneration", String.valueOf(UHCMode));
+        Bukkit.getWorld(main.WorldName).setGameRule(GameRule.NATURAL_REGENERATION, Boolean.valueOf(UHCMode));
     }
 
     public void setGameTime(int gameTime) {

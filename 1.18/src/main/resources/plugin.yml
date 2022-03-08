@@ -1,29 +1,32 @@
 name: BlockedInCombat
-version: 1.0.2
+version: 1.0.3
 author: kinj14
 main: fr.kinj14.blockedincombat.Main
-api-version: 1.18
-website: https://orerun.ovh
+api-version: 1.13
+website: https://github.com/Linj1k
 commands:
+  blockedincombat.settings:
+    description: open settings GUI
+    permission: blockedincombat.ChangeSettings
+    usage: "Usage: /settings"
+    aliases:
+      - settings
   blockedincombat.arena:
     description: regenerate the arena or the clear.
     permission: blockedincombat.Arena
     usage: "Usage: /arena build/clear"
     aliases:
-      - a
       - arena
   blockedincombat.cancel:
     description: cancel the start
     permission: blockedincombat.ChangeSettings
     aliases:
-      - c
       - cancel
   blockedincombat.canbuild:
     description: build or destroy blocks even when the game hasn't started
     permission: blockedincombat.canbuild
     usage: "Usage: /canbuild"
     aliases:
-      - b
       - canbuild
 permissions:
   blockedincombat.*:

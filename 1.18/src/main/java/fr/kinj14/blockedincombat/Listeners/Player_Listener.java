@@ -14,12 +14,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -91,60 +93,64 @@ public class Player_Listener implements Listener {
         ItemStack item = event.getItem();
         Block block = event.getClickedBlock();
 
-        if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK && !GameState.isState(GameState.PLAYING)){
-            Integer Interval = 20; // In Tick (20 = 1 second)
-            if(delayManager.CheckDelay(player,Interval)) {event.setCancelled(true);return;}
-            delayManager.AddDelay(player, Interval);
-            if(item != null && item.hasItemMeta()) {
+        if(GameState.isState(GameState.PLAYING)){return;}
+        Integer Interval = 20; // In Tick (20 = 1 second)
+        if(delayManager.CheckDelay(player,Interval)) {event.setCancelled(true);return;}
 
-                if(ItemsUtils.BlockIsWool(item.getType())){
-                    for(Teams team : Teams.values()){
-                        if(item.getItemMeta().getDisplayName().contains(team.getName())){
-                            main.getTeamsManager().switchPlayer(player, team);
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK && block != null){
+            if(block.getLocation().getBlockX() == 47 && block.getLocation().getBlockY() == 10 && block.getLocation().getBlockZ() == 76){
+                player.sendMessage(Lang.PLUGIN_DESCRIPTION.get());
+                delayManager.AddDelay(player, Interval);
 
-                            main.PrepareGame();
+                event.setCancelled(true);
+                return;
+            }
 
-                            event.setCancelled(true);
-                            return;
-                        }
+            if(block.getLocation().getBlockX() == 49 && block.getLocation().getBlockY() == 10 && block.getLocation().getBlockZ() == 82){
+                TextComponent message = new TextComponent("\n§bClick here to subscribe to the map creator! (PingiPuck)");
+                message.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, "https://www.youtube.com/c/PingiPuck?sub_confirmation=1" ) );
+                player.spigot().sendMessage( message );
+
+                TextComponent message2 = new TextComponent("§bClick here to see the creator of the plugin! (Kinj14)");
+                message2.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, "https://github.com/Linj1k" ) );
+                player.spigot().sendMessage( message2 );
+                delayManager.AddDelay(player, Interval);
+
+                event.setCancelled(true);
+                return;
+            }
+        }
+
+        if((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) && item != null && item.hasItemMeta()){
+            if(ItemsUtils.BlockIsWool(item.getType())){
+                for(Teams team : Teams.values()){
+                    if(item.getItemMeta().getDisplayName().contains(team.getName())){
+                        main.getTeamsManager().switchPlayer(player, team);
+
+                        main.PrepareGame();
+
+                        delayManager.AddDelay(player, Interval);
+                        event.setCancelled(true);
+                        return;
                     }
                 }
-
-                if(item.getItemMeta().getDisplayName().equalsIgnoreCase(main.getGuiManager().getSettings().getItem().getItemMeta().getDisplayName())){
-                    main.getGuiManager().getSettings().open(player);
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if(main.BungeeCord && item.getItemMeta().getDisplayName().contains("Lobby!")){
-                    main.getBungeeComManager().sendConnect(player, main.BungeeCord_Server);
-
-                    event.setCancelled(true);
-                    return;
-                }
             }
 
-            if(block != null){
-                if(block.getLocation().getBlockX() == 47 && block.getLocation().getBlockY() == 10 && block.getLocation().getBlockZ() == 76){
-                    player.sendMessage(main.getPrefix()+ Lang.PLUGIN_DESCRIPTION.get());
-
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if(block.getLocation().getBlockX() == 49 && block.getLocation().getBlockY() == 10 && block.getLocation().getBlockZ() == 82){
-                    TextComponent message = new TextComponent("\n§bClick here to subscribe to the map creator! (PingiPuck)");
-                    message.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, "https://www.youtube.com/c/PingiPuck?sub_confirmation=1" ) );
-                    player.spigot().sendMessage( message );
-
-                    TextComponent message2 = new TextComponent("\n§bClick here to see the creator of the plugin! (Kinj14)");
-                    message2.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, "https://orerun.ovh" ) );
-                    player.spigot().sendMessage( message2 );
-
-                    event.setCancelled(true);
-                    return;
-                }
+            if(item.getItemMeta().getDisplayName().equalsIgnoreCase(main.getGuiManager().getSettings().getItem().getItemMeta().getDisplayName())){
+                main.getGuiManager().getSettings().open(player);
+                delayManager.AddDelay(player, Interval);
+                event.setCancelled(true);
+                return;
             }
+
+            if(main.BungeeCord && item.getItemMeta().getDisplayName().contains("Lobby!")){
+                main.getBungeeComManager().sendConnect(player, main.BungeeCord_Server);
+                delayManager.AddDelay(player, Interval);
+
+                event.setCancelled(true);
+            }
+
+            return;
         }
     }
 
@@ -201,5 +207,15 @@ public class Player_Listener implements Listener {
             return;
         }
         event.setAmount((int)(event.getAmount() * (main.getSettingsManager().getConfig().getExpMultiplier()*1D)));
+    }
+
+    /**
+     * Handles food level changes.
+     * @param event The event.
+     */
+    @EventHandler (priority = EventPriority.HIGH)
+    public void onFoodLevelChange (FoodLevelChangeEvent event) {
+        if (event.getEntityType () != EntityType.PLAYER || GameState.isState(GameState.PLAYING)) return;
+        event.setCancelled (true);
     }
 }

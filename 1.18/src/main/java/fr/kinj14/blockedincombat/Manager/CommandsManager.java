@@ -45,6 +45,12 @@ public class CommandsManager implements CommandExecutor {
 
         if(sender instanceof Player){
             Player player = (Player) sender;
+
+            if(cmd.getName().equalsIgnoreCase("blockedincombat.settings") && PlayerManager.hasPermission(sender, "blockedincombat.ChangeSettings")){
+                main.getGuiManager().getSettings().open(player);
+                return true;
+            }
+
             if(cmd.getName().equalsIgnoreCase("blockedincombat.canbuild") && PlayerManager.hasPermission(sender, "blockedincombat.canbuild")){
                 if(main.getPlayersBuild().contains(player)){
                     main.getPlayersBuild().remove(player);

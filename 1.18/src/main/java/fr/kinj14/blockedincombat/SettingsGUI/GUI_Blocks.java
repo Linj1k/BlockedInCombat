@@ -96,6 +96,6 @@ public class GUI_Blocks extends GUI {
 
     @Override
     public ItemStack getItem(){
-        return ItemsManager.buildItemstack(new ItemStack(Material.GRASS, 1), Lang.CONFIG_GUI_BLOCKS_ITEM.get(), new ArrayList<>());
+        return ItemsManager.buildItemstack(new ItemStack(Material.DIRT, 1), Lang.CONFIG_GUI_BLOCKS_ITEM.get(), new ArrayList<>());
     }
 }

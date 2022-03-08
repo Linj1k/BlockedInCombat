@@ -17,6 +17,7 @@ public class RegistersManager {
         registerCommand("blockedincombat.cancel");
         registerCommand("blockedincombat.arena");
         registerCommand("blockedincombat.canbuild");
+        registerCommand("blockedincombat.settings");
     }
 
     public void registerCommand(String command_name){
