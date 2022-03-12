@@ -121,6 +121,7 @@ public class GUI_Configs extends GUI {
             ArrayList<String> description = new ArrayList<>();
             description.add(Lang.CONFIG_GUI_SETTINGS_TABHEALTH.get()+": "+settings.getTabHealth());
             description.add(Lang.CONFIG_GUI_SETTINGS_BONUSCHEST.get()+": "+settings.getBonusChest());
+            description.add(Lang.CONFIG_GUI_SETTINGS_SAMELOOTINCHEST.get()+": "+settings.getSameLootChest());
             description.add(Lang.CONFIG_GUI_SETTINGS_AUTOSMELT.get()+": "+settings.getAutoSmelt());
             description.add(Lang.CONFIG_GUI_SETTINGS_AUTOSMELTFORTUNE.get()+": "+settings.getAutoSmeltFortune());
             description.add(Lang.CONFIG_GUI_SETTINGS_UHCMODE.get()+": "+settings.getUHCMode());
@@ -139,7 +140,7 @@ public class GUI_Configs extends GUI {
             menu.addItem(configItem);
         }
 
-        menu.setItem(25, ItemsManager.buildItemstack(new ItemStack(Material.BOOK, 1), Lang.CONFIG_GUI_CONFIGS_SAVEPROFILE.get(), new ArrayList<>()));
+        menu.setItem(25, ItemsManager.buildItemstack(new ItemStack(Material.BOOK, 1), Lang.CONFIG_GUI_CONFIGS_PRESETSAVE.get(), new ArrayList<>()));
         //Return Item
         menu.setItem(26, ItemsManager.buildItemstack(new ItemStack(Material.COMPASS, 1), Lang.CONFIG_GUI_ITEMBACK.get(), new ArrayList<>()));
     }

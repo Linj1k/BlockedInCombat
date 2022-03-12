@@ -10,7 +10,11 @@ import java.text.SimpleDateFormat;
 
 public class Finish extends BukkitRunnable {
     protected final Main main = Main.getInstance();
-    private int timer = 10;
+    private int timer;
+
+    public Finish(int customTime) {
+        this.timer = customTime;
+    }
 
     @Override
     public void run() {

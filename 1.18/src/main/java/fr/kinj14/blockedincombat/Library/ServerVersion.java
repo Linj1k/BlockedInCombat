@@ -43,8 +43,8 @@ public class ServerVersion {
         v1_18_R1,
         v1_18_R2;
 
-        private Integer value;
-        private String shortVersion;
+        private final Integer value;
+        private final String shortVersion;
         private static Version current = null;
 
         Version() {

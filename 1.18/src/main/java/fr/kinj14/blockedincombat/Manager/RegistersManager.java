@@ -2,26 +2,38 @@ package fr.kinj14.blockedincombat.Manager;
 
 import fr.kinj14.blockedincombat.Listeners.*;
 import fr.kinj14.blockedincombat.Main;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
 public class RegistersManager {
     protected final Main main = Main.getInstance();
-    protected final PluginManager pm;
+    protected final PluginManager pluginManager;
+    private final CommandsManager cmdManager = new CommandsManager();
 
     public RegistersManager(){
-        pm = main.getServer().getPluginManager();
+        pluginManager = main.getServer().getPluginManager();
     }
 
     public void registersCommands(){
+        registerCommand("blockedincombat");
         registerCommand("blockedincombat.cancel");
-        registerCommand("blockedincombat.arena");
+        registerCommand("blockedincombat.arena", true);
         registerCommand("blockedincombat.canbuild");
         registerCommand("blockedincombat.settings");
+        registerCommand("blockedincombat.devmode");
+        registerCommand("blockedincombat.stats");
+    }
+
+    public void registerCommand(String command_name, boolean TabCompleter){
+        PluginCommand cmd = main.getCommand(command_name);
+
+        cmd.setExecutor(cmdManager);
+        if(TabCompleter){ cmd.setTabCompleter(cmdManager); }
     }
 
     public void registerCommand(String command_name){
-        main.getCommand(command_name).setExecutor(new CommandsManager());
+        registerCommand(command_name, false);
     }
 
     public void registersListeners(){
@@ -33,6 +45,6 @@ public class RegistersManager {
     }
 
     public void registerListener(Listener l){
-        pm.registerEvents(l, main);
+        pluginManager.registerEvents(l, main);
     }
 }

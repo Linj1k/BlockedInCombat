@@ -16,13 +16,13 @@ import org.bukkit.inventory.ItemStack;
  *
  */
 public class InstantIngot {
-    public static Boolean OreToIngot(BlockBreakEvent event, boolean isactivate, boolean fortune, Material ore, Material ingot) {
+    public static void OreToIngot(BlockBreakEvent event, boolean isactivate, boolean fortune, Material ore, Material ingot) {
         Block block = event.getBlock();
         Player p = event.getPlayer();
         if(isactivate && block.getType().equals(ore)) {
             if (p.getInventory().getItemInMainHand().getType() == Material.STONE_PICKAXE || p.getInventory().getItemInMainHand().getType() == Material.IRON_PICKAXE || p.getInventory().getItemInMainHand().getType() == Material.DIAMOND_PICKAXE) {
                 if (p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
-                    return false;
+                    return;
                 }
                 int ItemCount = 1;
                 if (fortune && p.getInventory().getItemInMainHand().containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS)) {
@@ -41,9 +41,7 @@ public class InstantIngot {
                 orb.setExperience(event.getExpToDrop());
 
                 event.setCancelled(true);
-                return true;
             }
         }
-        return false;
     }
 }

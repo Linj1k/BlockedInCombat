@@ -1,12 +1,10 @@
 package fr.kinj14.blockedincombat.Manager;
 
 import fr.kinj14.blockedincombat.Enums.GameState;
-import fr.kinj14.blockedincombat.Library.ItemsUtils;
 import fr.kinj14.blockedincombat.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
@@ -17,40 +15,31 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ArenaManager {
     protected final Main main = Main.getInstance();
-    public Location StartLocation;
-    public Location EndLocation;
-    public boolean CancelTask = false;
-    private List<Integer> Tasks = new ArrayList<>();
+    public final Location StartLocation;
+    public final Location EndLocation;
+    private final List<Integer> Tasks = new ArrayList<>();
 
     public ArenaManager() {
-        StartLocation = new Location(Bukkit.getWorld(main.WorldName), 1054, 2, 1054);
-        EndLocation = new Location(Bukkit.getWorld(main.WorldName), 1025, 11, 1025);
+        StartLocation = new Location(main.world, 1054, 2, 1054);
+        EndLocation = new Location(main.world, 1025, 11, 1025);
         Tasks.clear();
     }
 
     //Setup Arena
     public void setupArena(){
-        buildBlock(Material.BEDROCK, 1025, 1055, 1025,1055, 0, 0);
+        buildBlock(Material.BEDROCK, 1025, 1055, 1025,1054, 0, 0);
 
         //X
         buildWall(Material.BEDROCK, 1024, 1055, 1024,1, 1, 12);
         buildWall(Material.BEDROCK, 1024, 1055, 1055,1, 1, 12);
 
         //Z
-        buildWall(Material.BEDROCK, 1055, 1, 1024,1055, 1, 12);
+        buildWall(Material.BEDROCK, 1055, 1, 1024,1056, 1, 12);
         buildWall(Material.BEDROCK, 1024, 1, 1024,1055, 1, 12);
     }
 
     public void setupClearArena(){
-        buildBlock(Material.AIR, 1025, 1055, 1025,1055, 0, 0);
-
-        //X
-        buildWall(Material.AIR, 1024, 1055, 1024,1, 1, 12);
-        buildWall(Material.AIR, 1024, 1055, 1055,1, 1, 12);
-
-        //Z
-        buildWall(Material.AIR, 1055, 1, 1024,1055, 1, 12);
-        buildWall(Material.AIR, 1024, 1, 1024,1055, 1, 12);
+        buildBlock(Material.AIR, 1024, 1056, 1024,1055, 0, 12);
     }
 
     public void buildBlock(Material mat, int xMin, int xMax, int zMin, int zMax, int yMin, int yMax){
@@ -58,8 +47,6 @@ public class ArenaManager {
     }
 
     public void buildBlock(Material mat, int xMin, int xMax, int zMin, int zMax, int Y, int yMax, boolean fakeBoolean){
-        World world = Bukkit.getWorld(main.WorldName);
-
         if(Y == yMax+1){
             return;
         }
@@ -72,7 +59,7 @@ public class ArenaManager {
                     buildBlock( mat, xMin, xMax, zMin, zMax, Y+1, yMax);
                     return;
                 }
-                Block block = world.getBlockAt(x,Y,z);
+                Block block = main.world.getBlockAt(x,Y,z);
                 block.setType(mat);
             }
         }
@@ -83,8 +70,6 @@ public class ArenaManager {
     }
 
     public void buildWall(Material mat, int xMin, int xMax, int zMin, int zMax, int Y, int yMax, boolean fakeBoolean){
-        World world = Bukkit.getWorld(main.WorldName);
-
         if(Y == yMax+1){
             return;
         }
@@ -97,7 +82,7 @@ public class ArenaManager {
                     return;
                 }
                 buildBlock( mat, xMin, xMax, zMin, zMax, Y+1, yMax);
-                Block block = world.getBlockAt(x,Y,zMin);
+                Block block = main.world.getBlockAt(x,Y,zMin);
                 block.setType(mat);
             }
         }
@@ -110,7 +95,7 @@ public class ArenaManager {
                     return;
                 }
                 buildBlock( mat, xMin, xMax, zMin, zMax, Y+1, yMax);
-                Block block = world.getBlockAt(xMin,Y,z);
+                Block block = main.world.getBlockAt(xMin,Y,z);
                 block.setType(mat);
             }
         }
@@ -119,33 +104,7 @@ public class ArenaManager {
     //Arena
     public void clearArena(){
         stopTasks();
-        clearArena((int) StartLocation.getY()-1);
-    }
-
-    public void clearArena(int Y){
-        int xMin = (int)EndLocation.getX();
-        int xMax = (int)StartLocation.getX()+1;
-        int zMin = (int)EndLocation.getZ();
-        int zMax = (int)StartLocation.getZ();
-
-        World world = Bukkit.getWorld(main.WorldName);
-
-        if(Y >= 13){
-            return;
-        }
-
-        for(int x = xMin; x <= xMax; x++)
-        {
-            for(int z = zMin; z <= zMax; z++)
-            {
-                if(x == xMax){
-                    clearArena(Y+1);
-                    return;
-                }
-                Block block = world.getBlockAt(x,Y,z);
-                block.setType(Material.AIR);
-            }
-        }
+        buildBlock(Material.AIR, 1025, 1055, 1025,1054, 1, 33);
     }
 
     public void buildArena(){
@@ -159,13 +118,12 @@ public class ArenaManager {
         int zMin = (int)EndLocation.getZ();
         int zMax = (int)StartLocation.getZ();
 
-        World world = Bukkit.getWorld(main.WorldName);
-
         if(Y == 12){
             return;
         }
 
         long delay = 0;
+        int tmpDelay = 5;
 
         for(int x = xMin; x <= xMax; x++)
         {
@@ -177,9 +135,13 @@ public class ArenaManager {
                     buildArena(Y+1);
                     return;
                 }
-                delay = delay + 1L;
-                Block block = world.getBlockAt(x,Y,z);
+                Block block = main.world.getBlockAt(x,Y,z);
                 if(main.getSettingsManager().getConfig().getArenaDelay()){
+                    tmpDelay++;
+                    if(tmpDelay >= 6){
+                        tmpDelay = 0;
+                        delay = delay + 1L;
+                    }
                     int task = Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> {
                         if(GameState.isState(GameState.GENERATE_MAP)){
                             block.setType(main.getSettingsManager().getRandomBlock());
@@ -200,72 +162,48 @@ public class ArenaManager {
     }
 
     public void finishArea(){
-        int xMin = (int)EndLocation.getX();
-        int xMax = (int)StartLocation.getX()+1;
-        int zMin = (int)EndLocation.getZ();
-        int zMax = (int)StartLocation.getZ();
+        buildBlock(Material.BEDROCK, (int)EndLocation.getX(), (int)StartLocation.getX()+1, (int)EndLocation.getZ(),(int)StartLocation.getZ(), 12, 12);
+    }
 
-        World world = Bukkit.getWorld(main.WorldName);
+    // Create Random Bonus Chest
+    public ArrayList<ItemStack> createRandomBonusChest(){
+        ArrayList<ItemStack> itemsList = new ArrayList<>();
 
-        for(int x = xMin; x <= xMax; x++)
-        {
-            for(int z = zMin; z <= zMax; z++)
-            {
-                Block block = world.getBlockAt(x,12,z);
-                block.setType(Material.BEDROCK);
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        for(int i=0; i <= random.nextInt(25); i++){
+            ItemStack item = new ItemStack(main.getSettingsManager().getRandomItems(), random.nextInt(7));
+            if(main.itemsUtils.ItemIsTool(item)){
+                item.setAmount(1);
             }
+
+            itemsList.add(item);
         }
+
+        return itemsList;
     }
 
     //Setup team Spawn
-    public void setupTeam(Location loc){
-        setupTeam(loc, (int)loc.getY());
+    public void setupTeam(Location loc, ArrayList<ItemStack> itemsList){
+        Location start = new Location(main.world, loc.getX()-1, 0, loc.getZ()-1);
+        Location end = new Location(main.world, loc.getX()+2, 0, loc.getZ()+1);
+
+        buildBlock(Material.AIR, (int)start.getX(), (int)end.getX(), (int)start.getZ(),(int)end.getZ(), (int)loc.getY(), 4);
 
         if(main.getSettingsManager().getConfig().getBonusChest()){
-            World world = Bukkit.getWorld(main.WorldName);
-            loc = new Location(world, loc.getX(), loc.getY()-1, loc.getZ());
-            Block block = world.getBlockAt(loc);
+            loc = new Location(main.world, loc.getX(), loc.getY()-1, loc.getZ());
+            Block block = main.world.getBlockAt(loc);
             block.setType(Material.CHEST);
             Chest chest = (Chest) block.getState();
+
             ThreadLocalRandom random = ThreadLocalRandom.current();
-            for(int i=0; i <= random.nextInt(chest.getBlockInventory().getSize()); i++){
-                int randomAmount = random.nextInt(7);
-
-                ItemStack item = new ItemStack(main.getSettingsManager().getRandomItems(), randomAmount);
-                if(new ItemsUtils().ItemIsTool(item)){
-                    item.setAmount(1);
-                }
-
-                chest.getBlockInventory().setItem(random.nextInt(chest.getBlockInventory().getSize()), item);
+            for (ItemStack item: itemsList) {
+                chest.getBlockInventory().setItem(random.nextInt(chest.getBlockInventory().getSize()-1), item);
             }
         }
     }
 
-    public void setupTeam(Location loc, int Y){
-        World world = Bukkit.getWorld(main.WorldName);
-        Location start = new Location(world, loc.getX()-1, 0, loc.getZ()-1);
-        Location end = new Location(world, loc.getX()+2, 0, loc.getZ()+1);
-        int xMin = (int)start.getX();
-        int xMax = (int)end.getX();
-        int zMin = (int)start.getZ();
-        int zMax = (int)end.getZ();
-
-        if(Y >= 4){
-            return;
-        }
-
-        for(int x = xMin; x <= xMax; x++)
-        {
-            for(int z = zMin; z <= zMax; z++)
-            {
-                if(x == xMax){
-                    setupTeam(loc, Y+1);
-                    return;
-                }
-                Block block = world.getBlockAt(x,Y,z);
-                block.setType(Material.AIR);
-            }
-        }
+    public void setupTeam(Location loc){
+        setupTeam(loc, main.getSettingsManager().getConfig().getBonusChest() ? createRandomBonusChest() : new ArrayList<>());
     }
 
     public void stopTasks(){

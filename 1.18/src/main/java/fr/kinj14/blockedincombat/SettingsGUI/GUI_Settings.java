@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class GUI_Settings extends GUI {
@@ -56,10 +57,16 @@ public class GUI_Settings extends GUI {
                         if(meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_SETTINGS_BONUSCHEST.get())){
                             this.settings.setBonusChest(!this.settings.getBonusChest());
                         }
+                        if(meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_SETTINGS_SAMELOOTINCHEST.get())){
+                            this.settings.setSameLootChest(!this.settings.getSameLootChest());
+                        }
                         if(meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_SETTINGS_AUTOSMELT.get())){
                             this.settings.setAutoSmelt(!this.settings.getAutoSmelt());
                         }
                         if(meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_SETTINGS_AUTOSMELTFORTUNE.get())){
+                            if(!this.settings.getAutoSmelt()){
+                                this.settings.setAutoSmelt(true);
+                            }
                             this.settings.setAutoSmeltFortune(!this.settings.getAutoSmeltFortune());
                         }
                         if(meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_SETTINGS_FRIENDLYFIRE.get())){
@@ -106,19 +113,8 @@ public class GUI_Settings extends GUI {
                             player.closeInventory();
                             for(Player p : Bukkit.getOnlinePlayers()){
                                 Teams t = main.getTeamsManager().getRandomTeamForPlayer(p);
-                                if (t != null && t instanceof Teams){
-                                    boolean canAdd = true;
-                                    Teams currentTeam = main.getTeamsManager().getPlayerTeam_ANYTEAM(p);
-                                    if(currentTeam != null && currentTeam instanceof Teams){
-                                        if(main.getTeamsManager().canRemovePlayerInTeam(p, currentTeam)){
-                                            main.getTeamsManager().removePlayerInTeam(p, currentTeam);
-                                        } else {
-                                            canAdd = false;
-                                        }
-                                    }
-                                    if(canAdd){
-                                        main.getTeamsManager().addPlayerInTeam(p, t);
-                                    }
+                                if (t != null){
+                                    main.getTeamsManager().switchPlayer(p, t);
                                 }
                             }
                         }
@@ -140,48 +136,112 @@ public class GUI_Settings extends GUI {
         Inventory menu = this.inventory;
 
         //TabHealth Item
-        menu.setItem(0, ItemsManager.buildItemstack(new ItemStack(Material.GOLDEN_APPLE, 1), Lang.CONFIG_GUI_SETTINGS_TABHEALTH.get(), new ArrayList<>(Collections.singletonList(
-                SettingsManager.booleanToString(this.settings.getTabHealth())
-        ))));
+        menu.setItem(
+            0,
+            ItemsManager.buildItemstack(
+                new ItemStack(Material.GOLDEN_APPLE, 1),
+                Lang.CONFIG_GUI_SETTINGS_TABHEALTH.get(),
+                new ArrayList<>(Arrays.asList(
+                    Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_TABHEALTH.get(),
+                    SettingsManager.booleanToString(this.settings.getTabHealth())
+                ))
+            )
+        );
 
         //BonusChest Item
-        menu.setItem(2, ItemsManager.buildItemstack(new ItemStack(Material.CHEST, 1), Lang.CONFIG_GUI_SETTINGS_BONUSCHEST.get(), new ArrayList<>(Collections.singletonList(
-                SettingsManager.booleanToString(this.settings.getBonusChest())
-        ))));
+        menu.setItem(
+            2,
+            ItemsManager.buildItemstack(
+                new ItemStack(Material.CHEST, 1),
+                Lang.CONFIG_GUI_SETTINGS_BONUSCHEST.get(),
+                new ArrayList<>(Arrays.asList(
+                    Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_BONUSCHEST.get(),
+                    SettingsManager.booleanToString(this.settings.getBonusChest())
+                ))
+            )
+        );
+
+        //SameLootInChest Item
+        menu.setItem(
+                3,
+                ItemsManager.buildItemstack(
+                        new ItemStack(Material.ENDER_CHEST, 1),
+                        Lang.CONFIG_GUI_SETTINGS_SAMELOOTINCHEST.get(),
+                        new ArrayList<>(Arrays.asList(
+                                Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_SAMELOOTINCHEST.get(),
+                                SettingsManager.booleanToString(this.settings.getSameLootChest())
+                        ))
+                )
+        );
 
         //InstantIngot Item
-        menu.setItem(4, ItemsManager.buildItemstack(new ItemStack(Material.IRON_INGOT, 1), Lang.CONFIG_GUI_SETTINGS_AUTOSMELT.get(), new ArrayList<>(Collections.singletonList(
-                SettingsManager.booleanToString(this.settings.getAutoSmelt())
-        ))));
+        menu.setItem(
+            5,
+            ItemsManager.buildItemstack(
+                new ItemStack(Material.IRON_INGOT, 1),
+                Lang.CONFIG_GUI_SETTINGS_AUTOSMELT.get(),
+                new ArrayList<>(Arrays.asList(
+                    Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_AUTOSMELT.get(),
+                    SettingsManager.booleanToString(this.settings.getAutoSmelt())
+                ))
+            )
+        );
 
         //InstantIngotFortune Item
-        ItemStack instantingotfortune_item = ItemsManager.buildItemstack(new ItemStack(Material.IRON_INGOT, 1), Lang.CONFIG_GUI_SETTINGS_AUTOSMELTFORTUNE.get(), new ArrayList<>(Collections.singletonList(
-                SettingsManager.booleanToString(this.settings.getAutoSmeltFortune())
-        )));
-        ItemMeta im = instantingotfortune_item.getItemMeta();
+        ItemStack iif_item = ItemsManager.buildItemstack(
+                new ItemStack(Material.IRON_INGOT, 1),
+                Lang.CONFIG_GUI_SETTINGS_AUTOSMELTFORTUNE.get(),
+                new ArrayList<>(Arrays.asList(
+                    Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_AUTOSMELTFORTUNE.get(),
+                    SettingsManager.booleanToString(this.settings.getAutoSmeltFortune())
+                )
+            )
+        );
+        ItemMeta im = iif_item.getItemMeta();
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        instantingotfortune_item.setItemMeta(im);
-        instantingotfortune_item.addUnsafeEnchantment(Enchantment.LOOT_BONUS_BLOCKS, 3);
-
-        menu.setItem(6, instantingotfortune_item);
+        iif_item.setItemMeta(im);
+        iif_item.addUnsafeEnchantment(Enchantment.LOOT_BONUS_BLOCKS, 3);
+        menu.setItem(6, iif_item);
 
         //FriendlyFire Item
-        menu.setItem(8, ItemsManager.buildItemstack(new ItemStack(Material.IRON_SWORD, 1), Lang.CONFIG_GUI_SETTINGS_FRIENDLYFIRE.get(), new ArrayList<>(Collections.singletonList(
-                SettingsManager.booleanToString(this.settings.getFriendlyFire())
-        ))));
+        menu.setItem(
+            8,
+            ItemsManager.buildItemstack(
+                new ItemStack(Material.IRON_SWORD, 1),
+                Lang.CONFIG_GUI_SETTINGS_FRIENDLYFIRE.get(),
+                new ArrayList<>(Arrays.asList(
+                    Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_FRIENDLYFIRE.get(),
+                    SettingsManager.booleanToString(this.settings.getFriendlyFire())
+                ))
+            )
+        );
 
         //NaturalRegen Item
-        ItemStack healthregen_item = ItemsManager.buildItemstack(new ItemStack(Material.POTION, 1), Lang.CONFIG_GUI_SETTINGS_UHCMODE.get(), new ArrayList<>(Collections.singletonList(
+        ItemStack hr_item = ItemsManager.buildItemstack(
+            new ItemStack(Material.POTION, 1),
+            Lang.CONFIG_GUI_SETTINGS_UHCMODE.get(),
+            new ArrayList<>(Arrays.asList(
+                Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_UHCMODE.get(),
                 SettingsManager.booleanToString(this.settings.getUHCMode())
-        )));
-        ItemMeta him = healthregen_item.getItemMeta();
+            ))
+        );
+        ItemMeta him = hr_item.getItemMeta();
         him.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        healthregen_item.setItemMeta(him);
-        menu.setItem(18, healthregen_item);
+        hr_item.setItemMeta(him);
+        menu.setItem(18, hr_item);
 
         //ExpMultiplier Item
-        ItemStack ExpMultiplierItem = ItemsManager.buildItemstack(new ItemStack(Material.EXPERIENCE_BOTTLE, 1), Lang.CONFIG_GUI_SETTINGS_EXPMULTIPLIER.get(), new ArrayList<>(Collections.singletonList(String.valueOf(settings.getExpMultiplier()))));
-        menu.setItem(20, ExpMultiplierItem);
+        menu.setItem(
+            20,
+            ItemsManager.buildItemstack(
+                new ItemStack(Material.EXPERIENCE_BOTTLE, 1),
+                Lang.CONFIG_GUI_SETTINGS_EXPMULTIPLIER.get(),
+                new ArrayList<>(Arrays.asList(
+                    Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_EXPMULTIPLIER.get(),
+                    String.valueOf(settings.getExpMultiplier())
+                ))
+            )
+        );
 
         //Configs Item
         menu.setItem(22, main.getGuiManager().getConfigs().getItem());
@@ -193,11 +253,20 @@ public class GUI_Settings extends GUI {
         menu.setItem(25, main.getGuiManager().getItemsChest().getItem());
 
         //RandomTeam Item
-        menu.setItem(26, ItemsManager.buildItemstack(new ItemStack(Material.WHITE_BANNER, 1), Lang.CONFIG_GUI_SETTINGS_RANDOMTEAM.get(), new ArrayList<>()));
+        menu.setItem(
+            26,
+            ItemsManager.buildItemstack(
+                new ItemStack(Material.WHITE_BANNER, 1),
+                Lang.CONFIG_GUI_SETTINGS_RANDOMTEAM.get(),
+                new ArrayList<>(Collections.singletonList(
+                        Lang.CONFIG_GUI_SETTINGS_DESCRIPTIONS_RANDOMTEAM.get()
+                ))
+            )
+        );
     }
 
     @Override
     public ItemStack getItem(){
-        return ItemsManager.buildItemstack(new ItemStack(Material.COMPASS, 1), Lang.CONFIG_GUI_SETTINGS_ITEM.get(), new ArrayList<>());
+        return ItemsManager.buildItemstack(new ItemStack(Material.COMPASS, 1), "&b- "+Lang.CONFIG_GUI_SETTINGS_NAME.get()+" -", new ArrayList<>());
     }
 }

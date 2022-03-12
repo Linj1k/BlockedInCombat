@@ -1,24 +1,36 @@
 name: BlockedInCombat
-version: 1.0.3
+version: 1.1.0
 author: kinj14
 main: fr.kinj14.blockedincombat.Main
 api-version: 1.13
 website: https://github.com/Linj1k
+
 commands:
+  blockedincombat:
+    description: Information about BlockedInCombat
+    usage: "Usage: /blockedincombat"
+    aliases:
+      - blockedincombat
+  blockedincombat.devmode:
+    description: Allows you to try the game mode without other players
+    permission: blockedincombat.*
+    usage: "Usage: /devmode"
+    aliases:
+      - devmode
   blockedincombat.settings:
-    description: open settings GUI
+    description: Open Settings GUI
     permission: blockedincombat.ChangeSettings
     usage: "Usage: /settings"
     aliases:
       - settings
   blockedincombat.arena:
-    description: regenerate the arena or the clear.
+    description: setup,setup clear,generate,finish,clear and teleport to arena
     permission: blockedincombat.Arena
-    usage: "Usage: /arena build/clear"
+    usage: "Usage: /arena setup/setupclear/build/finish/clear/tp"
     aliases:
       - arena
   blockedincombat.cancel:
-    description: cancel the start
+    description: Cancel the game
     permission: blockedincombat.ChangeSettings
     aliases:
       - cancel
@@ -28,6 +40,12 @@ commands:
     usage: "Usage: /canbuild"
     aliases:
       - canbuild
+  blockedincombat.stats:
+    description: Look at your stats or those of others (Wins, kills and more)
+    usage: "Usage: /stats {PlayerName}"
+    aliases:
+      - stats
+
 permissions:
   blockedincombat.*:
     description: Gives access to *

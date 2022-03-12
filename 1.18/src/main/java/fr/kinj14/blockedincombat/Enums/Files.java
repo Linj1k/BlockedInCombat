@@ -7,16 +7,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.*;
 
 public enum Files {
-    LANG("lang.yml");
+    CONFIG("config.yml"),
+    LANG("lang.yml"),
+    Spigot("spigot.yml");
 
     private final String fileName;
-    private final File dataFolder;
+    private File dataFolder;
 
     protected final Main main = Main.getInstance();
 
     Files(String fileName){
         this.fileName = fileName;
-        this.dataFolder = main.getDataFolder();
+    }
+
+    public void setFolder(File folder){
+        this.dataFolder = folder;
     }
 
     public File getFile(){
@@ -39,7 +44,7 @@ public enum Files {
         return this.fileName;
     }
 
-    public void create(){
+    public void create(boolean forceCreate){
         if(fileName == null || fileName.isEmpty()){
             throw new IllegalArgumentException(main.getPrefix(true)+" ResourcePath cannot be null or empty!");
         }
@@ -50,14 +55,12 @@ public enum Files {
         }
 
         if(!dataFolder.exists() && !dataFolder.mkdir()){
-            main.logger.severe(main.getPrefix(true)+" Failed to make plugin directory!");
+            main.getLogger().severe(main.getPrefix(true)+" Failed to make plugin directory!");
         }
 
         File outFile = getFile();
         try{
-            if(!outFile.exists()){
-                main.logger.info(main.getPrefix(true)+" The "+fileName+" was not found, creation in progress ...");
-
+            if(forceCreate || !outFile.exists()){
                 OutputStream out = new FileOutputStream(outFile);
                 byte[] buf = new byte[1024];
                 int n;
@@ -70,11 +73,24 @@ public enum Files {
                 in.close();
 
                 if(!outFile.exists()){
-                    main.logger.severe(main.getPrefix(true)+" Unable to copy file !");
+                    main.getLogger().severe(main.getPrefix(true)+" Unable to copy file !");
+                } else if(!forceCreate) {
+                    main.getLogger().info(main.getPrefix(true)+" "+fileName+" is created !");
                 }
             }
         } catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+    public void create(){
+        create(false);
+    }
+
+    public void delete(){
+        File file = getFile();
+        if(file.exists() && !file.isDirectory()){
+            file.delete();
         }
     }
 }

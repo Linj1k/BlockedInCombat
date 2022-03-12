@@ -5,13 +5,13 @@ import fr.kinj14.blockedincombat.SettingsGUI.Configs.GUI_Configs;
 import fr.kinj14.blockedincombat.SettingsGUI.Configs.GUI_ConfigsChoice;
 
 public class GUIManager {
-    private GUI_Settings settings;
-    private GUI_Timers timers;
-    private GUI_Blocks blocks;
-    private GUI_ItemsChest itemsChest;
-    private GUI_Configs configs;
-    private GUI_ConfigsChoice configsChoice;
-    private GUI_Anvil anvil;
+    private final GUI_Settings settings;
+    private final GUI_Timers timers;
+    private final GUI_Blocks blocks;
+    private final GUI_ItemsChest itemsChest;
+    private final GUI_Configs configs;
+    private final GUI_ConfigsChoice configsChoice;
+    private final GUI_Anvil anvil;
 
     public GUIManager() {
         settings = new GUI_Settings("blockedincombat.ChangeSettings");

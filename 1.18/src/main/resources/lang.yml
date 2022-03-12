@@ -1,6 +1,7 @@
 plugin:
-  initialization: "initialization in progress..."
+  initialization: "Initialization in progress..."
   disable: "BlockedInCombat is Disable !"
+  notuptodate: "The plugin is not up to date!"
   versionnotsupported: "The server version is not supported! (Minimum {version}})"
   description: "\n &bBlocked In Combat &ris a combat arena consisting completely of &brandom blocks. &rYour objective is to &bkill &rall players on the enemy teams using resources you can gather from the arena. \n\n Make sure to quickly craft weapons, armor, and maybe even try some enchanting while &balways being prepared &rto take on enemies trying to kill you."
   joinmsg: "{player} has joined!"
@@ -9,6 +10,9 @@ plugin:
   dateformat: "yyyy-MM-dd" #https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
   timerformat: "mm:ss" #https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
   nopermission: "You don't have the permissions to do this!"
+  arenageneration: "&6Generation \n &6of the arena"
+  gostartgame: "&4GO !"
+  gostartgametext: "&cMine, equip yourself and fight"
 
 config:
   activated: "Activated"
@@ -18,43 +22,53 @@ config:
     itemback: "Back"
     settings:
       name: "Settings"
-      item: "&b- Settings -"
-      tabhealth: "TabHealth"
-      bonuschest: "BonusChest"
-      autosmelt: "AutoSmelt"
-      autosmeltfortune: "AutoSmeltFortune"
-      friendlyfire: "FriendlyFire"
-      uhcmode: "UHCMode"
-      expmultiplier: "ExpMultiplier"
-      randomteam: "RandomTeam"
+      tabhealth: "&bTabHealth"
+      bonuschest: "&bBonusChest"
+      samelootinchest: "&bSameLootInChests"
+      autosmelt: "&bAutoSmelt"
+      autosmeltfortune: "&bAutoSmeltFortune"
+      friendlyfire: "&bFriendlyFire"
+      uhcmode: "&bUHCMode"
+      expmultiplier: "&bExpMultiplier"
+      randomteam: "&bRandomTeam"
+      descriptions:
+        tabhealth: "&7Players Health in the tab"
+        bonuschest: "&7Chest with random items per Team"
+        samelootinchest: "&7Same loot in the bonus chests"
+        autosmelt: "&7Break an ore and obtain directly an ingot"
+        autosmeltfortune: "&7Get more ingots with AutoSmelt"
+        friendlyfire: "&7Friendly Fire"
+        uhcmode: "&7Natural Regeneration"
+        expmultiplier: "&7Increases the obtained exp"
+        randomteam: "&7Put players in different teams"
 
     timers:
       name: "Settings (Timers)"
-      item: "Timers"
-      arenadelay: "ArenaDelay"
-      arenadelaydescription: "Progressive arena generation"
-      gametime: "GameTime"
-      combattime: "PVPTime"
-      glowingtime: "GlowingTime"
+      item: "&bTimers"
+      arenadelay: "&bArenaDelay"
+      arenadelaydescription: "&7Progressive arena generation"
+      gametime: "&bGameTime"
+      combattime: "&bPVPTime"
+      glowingtime: "&bGlowingTime"
 
     blocks:
       name: "Settings (Blocks)"
-      item: "Blocks"
+      item: "&bBlocks"
 
     items:
       name: "Settings (Items)"
-      item: "Items"
+      item: "&bItems"
 
     configs:
       name: "Settings (Profiles)"
-      item: "Profiles"
-      saveprofile: "Save Profile"
+      item: "&bPresets"
+      presetsave: "Save Preset"
       presetsaved: "The preset has been saved"
       presetloaded: "The preset has been loaded successfully"
       presetfailed: "Failed to load preset"
 
     configschoice:
-      name: "Profiles (Choice)"
+      name: "Preset (Choice)"
       rename: "Rename"
       delete: "Delete"
       presetrenamefailed: "Preset failed to rename !"
@@ -63,13 +77,29 @@ config:
 
 chat:
   global: "&r[&7Global&r]"
-  team: "&r[{teamcolor}Team&r]"
+  team: "&r[&7Team&r]" # {teamcolor}
   spectator: "&r[&7SPECTATOR&r]"
 
 commands:
+  blockedincombat:
+    version: "Version:"
+    createdby: "Created by"
+  devmode:
+    text: "Devmode is {mode}"
+    activate: "Activate"
+    disable: "Disable"
   canbuild:
     activated: "You can now build!"
     disabled: "You can no longer build!"
+  stats:
+    text: "The Stats of the player: {playername}"
+    timeplayed: "Time Played: &2{time} hours"
+    wins: "Wins: "
+    losts: "Losts: "
+    kills: "Kills: "
+    deaths: "Deaths: "
+    cantfinddata: "Unable to find your data ! Sorry :("
+    notenabled: "Stats are not enabled on the server!"
 
 gamestate:
   leavearea: "You've gone too far!"
@@ -84,7 +114,7 @@ finish:
   equality: "&6!!! EQUALITY !!!"
   teams: "&6!!! TEAM {team} WIN §6!!!"
   cancel: "&4!!! The game has been canceled !!!"
-  noplayers: "§4!!! Not enough players !!!"
+  noplayers: "&4!!! Not enough players !!!"
 
 teams:
   blue: "Blue"
@@ -94,6 +124,7 @@ teams:
   spectator: "Spectator"
 
   joinmsg: "{player} &6joined team {team} !"
+  notinteam: "&eWarning, you are not in a team!"
   item: "Join {team}"
 
 scoreboard:

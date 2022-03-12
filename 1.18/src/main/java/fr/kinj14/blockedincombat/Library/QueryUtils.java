@@ -50,7 +50,7 @@ public class QueryUtils {
             out.close();
 
             StringBuilder response = new StringBuilder();
-            String responseLine = null;
+            String responseLine;
             try(BufferedReader br = new BufferedReader(
                     new InputStreamReader(con.getInputStream(), "utf-8"))) {
                 while ((responseLine = br.readLine()) != null) {
@@ -75,8 +75,6 @@ public class QueryUtils {
 
             con.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1");
 
-            @SuppressWarnings("unused")
-			int reponseCode = con.getResponseCode();
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuffer response = new StringBuffer();
@@ -84,6 +82,7 @@ public class QueryUtils {
                 response.append(inputLine);
             }
             in.close();
+            con.disconnect();
             return response.toString();
         }catch(IOException e)
         {

@@ -1,7 +1,3 @@
-/.metadata
-bin
-build
-.gradle
-.idea
-.classpath
-.project
+.metadata
+help.txt
+future_update.txt

@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
@@ -24,9 +25,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class SettingsManager {
     protected final Main main = Main.getInstance();
-    private final File folder = new File(main.getDataFolder(), "data");
-    private Map<String, SettingsSave> Saves = new HashMap<>();
-    private Gson gson;
+    private final File folder = new File(main.getDataFolder(), "presets");
+    private final Map<String, SettingsSave> Saves = new HashMap<>();
+    private final Gson gson;
 
     private boolean PVP = false;
     private boolean Glowing = false;
@@ -68,9 +69,11 @@ public class SettingsManager {
 
         if(health){
             if(obj == null){
+                final String renderType = main.getConfigManager().getStringConfig("General.TabHealthRenderType");
+                main.getLogger().info(renderType);
+
                 String dName = ChatColor.RED + "\u2665";
-                obj = sb.registerNewObjective("showhealth", "health");
-                obj.setDisplayName(dName);
+                obj = sb.registerNewObjective("showhealth", "health", dName, renderType.equalsIgnoreCase("hearts") ? RenderType.HEARTS : RenderType.INTEGER);
                 obj.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
                 for(Player player : Bukkit.getOnlinePlayers()){
@@ -87,7 +90,7 @@ public class SettingsManager {
     public void setUHCMode(boolean UHCMode) {
         getConfig().setUHCMode(UHCMode);
 
-        Bukkit.getWorld(main.WorldName).setGameRule(GameRule.NATURAL_REGENERATION, Boolean.valueOf(UHCMode));
+        main.world.setGameRule(GameRule.NATURAL_REGENERATION, Boolean.valueOf(UHCMode));
     }
 
     public void setGameTime(int gameTime) {
@@ -177,7 +180,7 @@ public class SettingsManager {
 
     public boolean save(SettingsSave save){
         if(getSaves().size() >= 25){
-            main.logger.severe(main.getPrefixDefault()+": The number of profiles has been exceeded! (26)");
+            main.getLogger().severe(main.PrefixDefault+": The number of profiles has been exceeded! (26)");
             return false;
         }
         if(save == null){return false;}
@@ -191,11 +194,11 @@ public class SettingsManager {
             loadAllFiles();
             return true;
         } catch (JsonIOException e) {
-            main.logger.severe(main.getPrefixDefault()+": An error occured while saving "+name+".json");
+            main.getLogger().severe(main.PrefixDefault+": An error occured while saving "+name+".json");
             e.printStackTrace();
             return false;
         } catch (IOException e) {
-            main.logger.severe(main.getPrefixDefault()+": An error occured while saving "+name+".json");
+            main.getLogger().severe(main.PrefixDefault+": An error occured while saving "+name+".json");
             e.printStackTrace();
             return false;
         }
@@ -204,7 +207,7 @@ public class SettingsManager {
     public boolean load(String name){
         final File fn = new File(getFolder(), name+".json");
         if(!fn.exists()){
-            main.logger.severe(main.getPrefixDefault()+": An error occured while loading "+name+".json (The file was not found!)");
+            main.getLogger().severe(main.PrefixDefault+": An error occured while loading "+name+".json (The file was not found!)");
             return false;
         }
         try {
@@ -219,10 +222,10 @@ public class SettingsManager {
                 getSaves().put(name, data);
                 return true;
             }
-            main.logger.severe(main.getPrefixDefault()+": An error occured while loading "+name+".json");
+            main.getLogger().severe(main.PrefixDefault+": An error occured while loading "+name+".json");
             return false;
         } catch (IOException e) {
-            main.logger.severe(main.getPrefixDefault()+": An error occured while loading "+name+".json");
+            main.getLogger().severe(main.PrefixDefault+": An error occured while loading "+name+".json");
             e.printStackTrace();
             return false;
         }
@@ -237,7 +240,7 @@ public class SettingsManager {
                 load(FileList[i].replace(".json", ""));
             }
         } else {
-            main.logger.severe(main.getPrefixDefault()+": An error occurred when loading all configurations.");
+            main.getLogger().severe(main.PrefixDefault+": An error occurred when loading all configurations.");
         }
     }
 
@@ -258,17 +261,17 @@ public class SettingsManager {
     public boolean deleteConfig(String name, boolean Reload){
         final File fn = new File(getFolder(), name+".json");
         if(!fn.exists()){
-            main.logger.severe(main.getPrefixDefault()+": An error occured while delete "+name+".json (The file was not found!)");
+            main.getLogger().severe(main.PrefixDefault+": An error occured while delete "+name+".json (The file was not found!)");
             return false;
         }
-        boolean successful = false;
+        boolean successful;
 
         successful = fn.delete();
 
         if(Reload){
             loadAllFiles();
         }
-        main.logger.info(main.getPrefixDefault()+" "+name+".json delete successfully!");
+        main.getLogger().info(main.PrefixDefault+" "+name+".json delete successfully!");
         return successful;
     }
 }

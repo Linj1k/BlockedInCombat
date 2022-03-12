@@ -15,12 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.logging.Logger;
-
 public class Chat_Listener implements Listener {
     protected final transient Server server;
     protected final Main main = Main.getInstance();
-    private DelayManager delay;
+    private final DelayManager delay;
 
     public Chat_Listener() {
         this.server = main.getServer();
@@ -31,7 +29,8 @@ public class Chat_Listener implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent event)
     {
         Player player = event.getPlayer();
-        String message = FormatChat(player, event.getMessage());
+        boolean isGlobal = event.getMessage().startsWith("!");
+        String message = FormatChat(player, isGlobal ? event.getMessage().substring(1) : event.getMessage());
 
         if(player.isDead() || event.isCancelled()) {
             event.setCancelled(true);
@@ -49,41 +48,33 @@ public class Chat_Listener implements Listener {
         }
 
         if(player.getGameMode() == GameMode.SPECTATOR){
-            message = Lang.CHAT_SPECTATOR.get()+message;
+            message = Lang.CHAT_SPECTATOR.get()+" "+message;
             for(Player p : Bukkit.getOnlinePlayers()){
                 if(p.getGameMode() == GameMode.SPECTATOR){
                     p.sendMessage(message);
                 }
             }
-            main.logger.info(message);
+            main.getLogger().info(message);
             event.setCancelled(true);
             return;
         }
 
-        if(GameState.isState(GameState.PLAYING)) {
-            if(event.getMessage().startsWith("!")){
-                message = Lang.CHAT_GLOBAL.get()+FormatChat(player, event.getMessage().substring(1));
-                GlobalMsg(message);
-                main.logger.info(message);
-                event.setCancelled(true);
-                return;
-            }
-
+        if(GameState.isState(GameState.PLAYING) && !isGlobal) {
             Teams playerTeam = main.getTeamsManager().getPlayerTeam(player);
             if(playerTeam != null) {
-                message = Lang.CHAT_TEAM.get().replace("{teamcolor}", playerTeam.getColor())+message;
+                message = Lang.CHAT_TEAM.get().replace("{teamcolor}", playerTeam.getColor())+" "+message;
                 for(Player pteam : playerTeam.getPlayers()) {
                     pteam.sendMessage(message);
                 }
 
-                main.logger.info(message);
+                main.getLogger().info(message);
                 event.setCancelled(true);
                 return;
             }
         } else {
-            message = Lang.CHAT_GLOBAL.get()+message;
+            message = Lang.CHAT_GLOBAL.get()+" "+message;
             GlobalMsg(message);
-            main.logger.info(message);
+            main.getLogger().info(message);
             event.setCancelled(true);
             return;
         }
@@ -108,7 +99,7 @@ public class Chat_Listener implements Listener {
     }
 
     public void GlobalMsg(String message){
-        for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+        for(Player p : server.getOnlinePlayers()) {
             p.sendMessage(message);
         }
     }

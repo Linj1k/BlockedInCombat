@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 public class GUI_Anvil {
     protected final Main main = Main.getInstance();
     private String Name;
-    private AnvilGUI.Builder builder;
-    private String permission;
+    private final AnvilGUI.Builder builder;
+    private final String permission;
 
     public GUI_Anvil(String permission) {
         this.permission = permission;
@@ -20,17 +20,17 @@ public class GUI_Anvil {
                     if(!text.contains(" ") && !text.contains("of profile") && !text.contains("name") && !text.isEmpty()) {
                         if(PlayerManager.hasPermission(player, this.permission)){
                             SettingsSave settings = main.getSettingsManager().getConfig();
-                            if(getName() != "new"){
+                            if(!getName().equals("new")){
                                 settings = main.getSettingsManager().getSave(getName());
                                 if(main.getSettingsManager().deleteConfig(getName(), false)){
-                                    main.logger.info("["+main.getPrefixDefault()+"] "+player.getName()+"("+player.getUniqueId().toString()+") deleted profile "+getName()+".json");
+                                    main.getLogger().info("["+main.PrefixDefault+"] "+player.getName()+"("+player.getUniqueId().toString()+") deleted profile "+getName()+".json");
                                 }
                             }
 
                             settings.setName(text);
                             if(main.getSettingsManager().save(settings)){
                                 player.sendMessage(main.getPrefix()+ Lang.CONFIG_GUI_CONFIGS_PRESETSAVED.get());
-                                main.logger.info("["+main.getPrefixDefault()+"] "+player.getName()+"("+player.getUniqueId().toString()+") created the profile "+text+".json");
+                                main.getLogger().info("["+main.PrefixDefault+"] "+player.getName()+"("+player.getUniqueId().toString()+") created the profile "+text+".json");
                                 setName("new");
                             }
                             return AnvilGUI.Response.close();
@@ -59,7 +59,7 @@ public class GUI_Anvil {
             }
         }
 
-        builder.text(getName() != "new" ? getName() : "Name of profile!");
+        builder.text(!getName().equals("new") ? getName() : "Name of profile!");
         builder.open(player);
     }
 }

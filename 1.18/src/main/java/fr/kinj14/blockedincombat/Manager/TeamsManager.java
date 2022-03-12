@@ -2,6 +2,7 @@ package fr.kinj14.blockedincombat.Manager;
 
 import fr.kinj14.blockedincombat.Enums.Lang;
 import fr.kinj14.blockedincombat.Enums.Teams;
+import fr.kinj14.blockedincombat.Events.OnChangeTeamEvent;
 import fr.kinj14.blockedincombat.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -15,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TeamsManager {
     protected final Main main = Main.getInstance();
-    private List<Teams> teamsList = new ArrayList<>();
+    private final List<Teams> teamsList = new ArrayList<>();
 
     public TeamsManager() {
         setup();
@@ -23,9 +24,7 @@ public class TeamsManager {
 
     public void setup(){
         teamsList.clear();
-        for(Teams team : Teams.values()){
-            teamsList.add(team);
-        }
+        teamsList.addAll(Arrays.asList(Teams.values()));
     }
 
     public List<Teams> getTeams() {
@@ -35,7 +34,7 @@ public class TeamsManager {
     public Teams getTeam(Teams teams){
         if(teams == null){return null;}
         for(Teams team : teamsList){
-            if(teams.getName() == team.getName()){
+            if(teams.getName().equals(team.getName())){
                 return team;
             }
         }
@@ -66,7 +65,7 @@ public class TeamsManager {
 
     public boolean playerIsInTeam(Player player, Teams teams){
         for(Teams team : getValidTeams()){
-            if(team.getName() == teams.getName()){
+            if(team.getName().equals(teams.getName())){
                 for(Player p : team.getPlayers()){
                     if(p.getUniqueId() == player.getUniqueId()){
                         return true;
@@ -106,11 +105,13 @@ public class TeamsManager {
     }
 
     public void switchPlayer(Player player, Teams team){
-        for(Teams t : getTeams()){
-            if(t.getName() != team.getName() && t.containsPlayer(player)){
-                t.removePlayer(player);
-            }
-        }
+        Teams lastTeam = getPlayerTeam_ANYTEAM(player);
+
+        OnChangeTeamEvent onChangeTeamEvent = new OnChangeTeamEvent(player, team, lastTeam);
+        Bukkit.getPluginManager().callEvent(onChangeTeamEvent);
+        if (onChangeTeamEvent.isCancelled()) {return;}
+
+        if(lastTeam != null){ lastTeam.removePlayer(player); }
 
         addPlayerInTeam(player, team);
     }
@@ -118,8 +119,13 @@ public class TeamsManager {
     public void eliminatePlayer(Player player){
         Teams team = getPlayerTeam(player);
         if(team != null){
-            team.removePlayer(player);
-            if(team.getPlayers().size() <= 0){
+            int alives = 0;
+            for (Player p: team.getPlayers()) {
+                if(p.getGameMode() == GameMode.SURVIVAL){
+                    alives++;
+                }
+            }
+            if(alives <= 0){
                 getTeams().remove(team);
             }
         }
@@ -129,9 +135,8 @@ public class TeamsManager {
         if(randomPlayer != null){
             player.teleport(randomPlayer.getLocation());
         } else {
-            player.teleport(new Location(Bukkit.getWorld(main.WorldName), 1040, 4, 1040));
+            player.teleport(new Location(main.world, 1040, 4, 1040));
         }
-        addPlayerInTeam(player, Teams.spectator);
 
         main.CheckWin();
     }
@@ -156,23 +161,23 @@ public class TeamsManager {
 
     // Utils
     public Teams getRandomTeamForPlayer(Player player) {
-        List<Teams> rteam = new ArrayList<>();
+        int tplayers = 9999;
+        Teams selectedTeam = null;
         for(Teams team : getTeamsNoSpec()) {
-            if(!team.containsPlayer(player) && team != null) {
-                rteam.add(team);
+            int size = team.getPlayers().size();
+            if(team != null && size <= tplayers && !team.containsPlayer(player)) {
+                tplayers = size;
+                selectedTeam = team;
             }
         }
 
-        return rteam.get(ThreadLocalRandom.current().nextInt(rteam.size()));
+        return selectedTeam;
     }
 
     public Teams getRandomTeam() {
         List<Teams> validTeams = getTeamsNoSpec();
         if(validTeams != null && validTeams.size() > 0){
-            Teams randomTeam = getTeams().get(ThreadLocalRandom.current().nextInt(validTeams.size()));
-            if(randomTeam != null){
-                return randomTeam;
-            }
+            return getTeams().get(ThreadLocalRandom.current().nextInt(validTeams.size()));
         }
         return null;
     }
@@ -246,7 +251,8 @@ public class TeamsManager {
     public List<Player> getPlayersNotInTeam(){
         List<Player> players = new ArrayList<>();
         for(Player player : Bukkit.getOnlinePlayers()){
-            if(getPlayerTeam_ANYTEAM(player) == null){
+            Teams pTeam = getPlayerTeam_ANYTEAM(player);
+            if(pTeam == null || pTeam == Teams.spectator){
                 players.add(player);
             }
         }

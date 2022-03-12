@@ -9,17 +9,15 @@ import java.util.Map;
 
 public class DelayManager {
     protected final Main main = Main.getInstance();
-    public Map<Player,Integer> DelayList = new HashMap<>();
+    public final Map<Player,Integer> DelayList = new HashMap<>();
     public void AddDelay(Player player, Integer delay) {
         if(CheckDelay(player,delay)) {return;}
         DelayList.put(player, delay);
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
-            public void run() {
-                if(DelayList.containsKey(player) && DelayList.containsValue(delay)){
-                    DelayList.remove(player, delay);
-                }
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, () -> {
+            if(DelayList.containsKey(player) && DelayList.containsValue(delay)){
+                DelayList.remove(player, delay);
             }
-        }, 0L+delay);
+        }, delay);
     }
 
     public Boolean CheckDelay(Player player, Integer delay) {

@@ -19,7 +19,7 @@ public abstract class GUI implements InventoryHolder {
     protected final Main main = Main.getInstance();
     protected SettingsSave settings;
     protected Inventory inventory;
-    protected String permission;
+    protected final String permission;
 
     public GUI(String permission){
         this.permission = permission;

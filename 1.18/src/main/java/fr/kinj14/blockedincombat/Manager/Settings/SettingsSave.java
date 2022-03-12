@@ -6,25 +6,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SettingsSave {
-    private String name = "ConfigSave";
-    private boolean TabHealth = false;
-    private boolean BonusChest = true;
-    private boolean AutoSmelt = false;
-    private boolean AutoSmeltFortune = false;
-    private boolean UHCMode = false;
-    private boolean FriendlyFire = false;
-    private boolean ArenaDelay = true;
-    private int GameTime = 20;
-    private int CombatTime = 2;
-    private int GlowingTime = 1;
-    private int ExpMultiplier = 1;
-    private Map<Material, Boolean> Blocks = new HashMap<>();
-    private Map<Material, Boolean> Items = new HashMap<>();
+    private String name;
+    private boolean TabHealth;
+    private boolean BonusChest;
+    private boolean SameLootBonusChest;
+    private boolean AutoSmelt;
+    private boolean AutoSmeltFortune;
+    private boolean UHCMode;
+    private boolean FriendlyFire;
+    private boolean ArenaDelay;
+    private int GameTime;
+    private int CombatTime;
+    private int GlowingTime;
+    private int ExpMultiplier;
+    private Map<Material, Boolean> Blocks;
+    private Map<Material, Boolean> Items;
 
-    public SettingsSave(String name, boolean tabHealth, boolean bonusChest, boolean autoSmelt, boolean autoSmeltFortune, boolean UHCMode, boolean friendlyFire, boolean ArenaDelay, int gameTime, int combatTime, int glowingTime, int expMultiplier, Map<Material, Boolean> blocks, Map<Material, Boolean> items) {
+    public SettingsSave(String name, boolean tabHealth, boolean bonusChest, boolean sameLootBonusChest, boolean autoSmelt, boolean autoSmeltFortune, boolean UHCMode, boolean friendlyFire, boolean ArenaDelay, int gameTime, int combatTime, int glowingTime, int expMultiplier, Map<Material, Boolean> blocks, Map<Material, Boolean> items) {
         this.name = name;
         this.TabHealth = tabHealth;
         this.BonusChest = bonusChest;
+        this.SameLootBonusChest = sameLootBonusChest;
         this.AutoSmelt = autoSmelt;
         this.AutoSmeltFortune = autoSmeltFortune;
         this.UHCMode = UHCMode;
@@ -52,6 +54,10 @@ public class SettingsSave {
 
     public boolean getBonusChest() {
         return BonusChest;
+    }
+
+    public boolean getSameLootChest(){
+        return SameLootBonusChest;
     }
 
     public boolean getAutoSmelt() {
@@ -104,6 +110,10 @@ public class SettingsSave {
 
     public void setBonusChest(boolean bonusChest) {
         BonusChest = bonusChest;
+    }
+
+    public void setSameLootChest(boolean sameLootBonusChest) {
+        SameLootBonusChest = sameLootBonusChest;
     }
 
     public void setAutoSmelt(boolean autoSmelt) {
@@ -210,6 +220,6 @@ public class SettingsSave {
         Items.put(Material.SHIELD, false);
         Items.put(Material.ENDER_PEARL, false);
 
-        return new SettingsSave("default", true, true, true, false, false, false, true, 10, 2, 6, 1, Blocks, Items);
+        return new SettingsSave("default", true, true, true, true, false, false, false, true, 10, 2, 6, 1, Blocks, Items);
     }
 }

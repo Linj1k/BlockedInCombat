@@ -21,15 +21,28 @@ public class Start extends BukkitRunnable {
         }
         timer--;
 
-        for(Player pls : Bukkit.getOnlinePlayers()) {
-            String timerdate = new SimpleDateFormat(Lang.PLUGIN_TIMERFORMAT.get()).format(timer*1000);
-            main.getScoreboardManager().updateTime(pls, timerdate);
-            pls.setLevel(timer);
-        }
-
         if(timer == 0) {
+            String[] arenagen = Lang.PLUGIN_ARENAGENERATION.get().split(" \\n ");
+            for(Player pls : Bukkit.getOnlinePlayers()) {
+                pls.sendTitle(arenagen[0],arenagen[1],0,40,0);
+            }
             main.SetupGame();
             cancel();
+            return;
+        }
+
+        for(Player pls : Bukkit.getOnlinePlayers()) {
+            String timerDate = new SimpleDateFormat(Lang.PLUGIN_TIMERFORMAT.get()).format(timer*1000);
+            main.getScoreboardManager().updateTime(pls, timerDate);
+            pls.setLevel(timer);
+
+            if(timer == 5 && main.getTeamsManager().getPlayersNotInTeam().contains(pls)){
+                pls.sendMessage(main.getPrefix()+Lang.TEAMS_NOTINTEAM.get());
+            }
+
+            if(timer <= 5) {
+                pls.sendTitle(String.valueOf(timer),"",0,40,0);
+            }
         }
     }
 }

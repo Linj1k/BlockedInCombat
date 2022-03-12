@@ -1,7 +1,7 @@
 package fr.kinj14.blockedincombat.Enums;
 
 import fr.kinj14.blockedincombat.Main;
-import org.bukkit.Bukkit;
+import fr.kinj14.blockedincombat.Manager.ItemsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,14 +22,14 @@ public enum Teams {
     private final String name;
     private final String Color;
     private final Material Wool;
-    private List<Player> players = new ArrayList<>();
-    private Location spawn;
+    private final List<Player> players = new ArrayList<>();
+    private final Location spawn;
 
     Teams(String name, String color, Material Wool, Location spawn){
         this.name = name;
         this.Color = color;
         this.Wool = Wool;
-        spawn.setWorld(Bukkit.getWorld(main.WorldName));
+        spawn.setWorld(main.world);
         this.spawn = spawn;
     }
 
@@ -57,7 +57,7 @@ public enum Teams {
     public String getColoredName(){ return getColor()+getName()+ChatColor.RESET; }
 
     public ItemStack getItem(){
-        return main.getItemsManager().buildItemstack(new ItemStack(getWool(), 1), Lang.TEAMS_ITEM.get().replace("{team}", getColoredName()), new ArrayList<>());
+        return ItemsManager.buildItemstack(new ItemStack(getWool(), 1), Lang.TEAMS_ITEM.get().replace("{team}", getColoredName()), new ArrayList<>());
     }
 
     public List<Player> getPlayers(){

@@ -3,24 +3,21 @@ package fr.kinj14.blockedincombat.Manager;
 import fr.kinj14.blockedincombat.Enums.Lang;
 import fr.kinj14.blockedincombat.Enums.Teams;
 import fr.kinj14.blockedincombat.Library.FastBoard.FastBoard;
-import fr.kinj14.blockedincombat.Library.ReflectionUtils;
 import fr.kinj14.blockedincombat.Main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreboardManager {
     protected final Main main = Main.getInstance();
-    public String timerdate = new SimpleDateFormat(Lang.PLUGIN_DATEFORMAT.get()).format(new Date((new java.sql.Timestamp(Calendar.getInstance().getTime().getTime())).getTime()));
-    public Map<Player, FastBoard> scorebaordMap = new HashMap<>();
-    private String yourip = main.getConfigManager().getStringConfig("General.YourIP");
+    //public String timerdate = new SimpleDateFormat(Lang.PLUGIN_DATEFORMAT.get()).format(new Date((new java.sql.Timestamp(Calendar.getInstance().getTime().getTime())).getTime()));
+    public final Map<Player, FastBoard> scorebaordMap = new HashMap<>();
+    private final String yourip = main.getConfigManager().getStringConfig("General.YourIP");
 
     public void setup(Player player){
         if(!scorebaordMap.containsKey(player)){
@@ -125,17 +122,26 @@ public class ScoreboardManager {
     public void updatePingToAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             try {
-                Object entityPlayer = ReflectionUtils.getHandle(player);
-                int ping = entityPlayer.getClass().getField("ping").getInt(entityPlayer);
+                int ping = player.getPing();
                 String playername = player.getPlayerListName();
                 if(playername.contains(" ")){
                     playername = player.getPlayerListName().split(" ")[0];
                 } else {
                     playername = playername+" ";
                 }
-                player.setPlayerListName(playername+" "+ChatColor.GREEN+String.valueOf(ping));
-            } catch (Exception ex) {
+                player.setPlayerListName(playername+" "+ChatColor.GREEN+String.valueOf(ping)+"ms");
+            } catch (Exception ignored) {
             }
         }
+    }
+
+    public void broadcastTitle(Collection<? extends Player> players, String title, String subtitle, int FadeIn, int Stay, int FadeOut){
+        for(Player pls : players) {
+            pls.sendTitle(title,subtitle,FadeIn,Stay,FadeOut);
+        }
+    }
+
+    public void broadcastTitle(String title, String subtitle, int FadeIn, int Stay, int FadeOut){
+        broadcastTitle(Bukkit.getOnlinePlayers(),title,subtitle,FadeIn,Stay,FadeOut);
     }
 }

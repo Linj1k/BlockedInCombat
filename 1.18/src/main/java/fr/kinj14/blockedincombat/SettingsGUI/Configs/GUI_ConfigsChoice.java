@@ -47,13 +47,13 @@ public class GUI_ConfigsChoice extends GUI {
 
                         String InventoryName = event.getView().getTitle();
                         if(PlayerManager.hasPermission(player, "blockedincombat.EditProfiles")){
-                            if (meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_CONFIGS_SAVEPROFILE.get())) {
+                            if (meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_CONFIGS_PRESETSAVE.get())) {
                                 SettingsSave settings = main.getSettingsManager().getConfig();
                                 settings.setName(InventoryName);
 
                                 if(main.getSettingsManager().save(settings)){
                                     player.sendMessage(main.getPrefix()+ Lang.CONFIG_GUI_CONFIGS_PRESETSAVED.get());
-                                    main.logger.info("["+main.getPrefixDefault()+"] "+player.getName()+"("+player.getUniqueId().toString()+") created the profile "+InventoryName+".json");
+                                    main.getLogger().info("["+main.PrefixDefault+"] "+player.getName()+"("+player.getUniqueId().toString()+") created the profile "+InventoryName+".json");
                                 }
 
                                 player.closeInventory();
@@ -68,7 +68,7 @@ public class GUI_ConfigsChoice extends GUI {
                                 player.closeInventory();
                                 if(main.getSettingsManager().deleteConfig(InventoryName, true)){
                                     player.sendMessage(main.getPrefix()+ Lang.CONFIG_GUI_CONFIGSCHOICE_PRESETDELETED.get());
-                                    main.logger.info("["+main.getPrefixDefault()+"] "+player.getName()+"("+player.getUniqueId().toString()+") deleted profile "+InventoryName+".json");
+                                    main.getLogger().info("["+main.PrefixDefault+"] "+player.getName()+"("+player.getUniqueId().toString()+") deleted profile "+InventoryName+".json");
                                 } else {
                                     player.sendMessage(main.getPrefix()+ Lang.CONFIG_GUI_CONFIGSCHOICE_PRESETDELETEFAILED.get());
                                 }
@@ -95,21 +95,32 @@ public class GUI_ConfigsChoice extends GUI {
     public void open(Player player, String name) {
         final Inventory inv = Bukkit.createInventory(this, getSlots(), name);
 
-        final ItemStack saveItem = ItemsManager.buildItemstack(new ItemStack(Material.GREEN_WOOL, 1), Lang.CONFIG_GUI_CONFIGS_SAVEPROFILE.get(), new ArrayList<>());
-        inv.setItem(10, saveItem);
+        //Save
+        inv.setItem(
+            10,
+            ItemsManager.buildItemstack(new ItemStack(Material.GREEN_WOOL, 1), Lang.CONFIG_GUI_CONFIGS_PRESETSAVE.get(), new ArrayList<>())
+        );
 
-        final ItemStack replaceItem = ItemsManager.buildItemstack(new ItemStack(Material.WHITE_WOOL, 1), Lang.CONFIG_GUI_CONFIGSCHOICE_RENAME.get(), new ArrayList<>());
-        inv.setItem(13, replaceItem);
+        //Rename
+        inv.setItem(
+            13,
+            ItemsManager.buildItemstack(new ItemStack(Material.WHITE_WOOL, 1), Lang.CONFIG_GUI_CONFIGSCHOICE_RENAME.get(), new ArrayList<>())
+        );
 
-        final ItemStack deleteItem = ItemsManager.buildItemstack(new ItemStack(Material.RED_WOOL, 1), Lang.CONFIG_GUI_CONFIGSCHOICE_DELETE.get(), new ArrayList<>());
-        inv.setItem(16, deleteItem);
+        //Delete
+        inv.setItem(
+            16,
+            ItemsManager.buildItemstack(new ItemStack(Material.RED_WOOL, 1), Lang.CONFIG_GUI_CONFIGSCHOICE_DELETE.get(), new ArrayList<>())
+        );
 
-        inv.setItem(26, ItemsManager.buildItemstack(new ItemStack(Material.COMPASS, 1), Lang.CONFIG_GUI_ITEMBACK.get(), new ArrayList<>()));
+        //Back
+        inv.setItem(
+            26,
+            ItemsManager.buildItemstack(new ItemStack(Material.COMPASS, 1), Lang.CONFIG_GUI_ITEMBACK.get(), new ArrayList<>())
+        );
+
         player.openInventory(inv);
     }
-
-    @Override
-    public void setMenuItems(){}
 
     @Override
     public ItemStack getItem(){return null;}

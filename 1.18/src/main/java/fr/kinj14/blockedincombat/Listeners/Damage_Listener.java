@@ -1,5 +1,6 @@
 package fr.kinj14.blockedincombat.Listeners;
 
+import fr.kinj14.blockedincombat.Data.PlayerData;
 import fr.kinj14.blockedincombat.Enums.GameState;
 import fr.kinj14.blockedincombat.Enums.Lang;
 import fr.kinj14.blockedincombat.Main;
@@ -18,10 +19,24 @@ public class Damage_Listener implements Listener {
 
     @EventHandler
     public void OnDeath(PlayerDeathEvent event) {
-        Player player = (Player) event.getEntity();
+        Player player = event.getEntity();
         Entity killer = player.getKiller();
 
         event.setDeathMessage(main.getPrefix()+"§4"+event.getDeathMessage());
+
+        if(main.canUsePlayersStats()){
+            if(killer != null && killer.isValid() && killer instanceof Player){
+                PlayerData killerStats = main.getPlayerManager().getPlayerData((Player) killer);
+                if(killerStats != null){
+                    killerStats.Kills = killerStats.Kills + 1;
+                }
+            }
+
+            PlayerData playerStats = main.getPlayerManager().getPlayerData(player);
+            if(playerStats != null){
+                playerStats.Deaths = playerStats.Deaths + 1;
+            }
+        }
 
         player.getInventory().clear();
         player.updateInventory();

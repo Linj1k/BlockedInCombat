@@ -3,10 +3,8 @@ package fr.kinj14.blockedincombat.Manager;
 import fr.kinj14.blockedincombat.Enums.Lang;
 import fr.kinj14.blockedincombat.Enums.Teams;
 import fr.kinj14.blockedincombat.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -23,7 +21,9 @@ public class ItemsManager {
         final ItemMeta im = is.getItemMeta();
 
         //SetItemMeta
-        im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
+        if(!displayName.equals("null")){
+            im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
+        }
         if(!description.isEmpty()){
             for(String de : description){
                 description.set(description.indexOf(de), ChatColor.translateAlternateColorCodes('&', de));
@@ -79,10 +79,8 @@ public class ItemsManager {
         player.updateInventory();
     }
 
-    public static void RemoveAllItems(){
-        World world = Bukkit.getWorld(Main.getInstance().WorldName);
-
-        for(Entity ent : world.getEntities()){
+    public void RemoveAllItems(){
+        for(Entity ent : main.world.getEntities()){
             if(ent instanceof Item){
                 ent.remove();
             }

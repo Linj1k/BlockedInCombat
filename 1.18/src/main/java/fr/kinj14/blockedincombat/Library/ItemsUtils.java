@@ -1,9 +1,9 @@
 package fr.kinj14.blockedincombat.Library;
 
+import fr.kinj14.blockedincombat.Main;
 import org.bukkit.Material;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +14,8 @@ import java.util.List;
  *
  */
 public class ItemsUtils {
+    protected final Main main = Main.getInstance();
+
     final List<String> ItemTool = new ArrayList<>();
     final List<Material> WoolType = new ArrayList<>();
 

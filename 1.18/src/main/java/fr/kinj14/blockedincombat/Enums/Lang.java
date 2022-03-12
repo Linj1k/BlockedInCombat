@@ -10,6 +10,7 @@ import java.util.Map;
 public enum Lang {
     PLUGIN_INITIALIZATION,
     PLUGIN_DISABLE,
+    PLUGIN_NOTUPTODATE,
     PLUGIN_VERSIONNOTSUPPORTED,
     PLUGIN_DESCRIPTION,
     PLUGIN_JOINMSG,
@@ -18,6 +19,9 @@ public enum Lang {
     PLUGIN_DATEFORMAT,
     PLUGIN_TIMERFORMAT,
     PLUGIN_NOPERMISSION,
+    PLUGIN_ARENAGENERATION,
+    PLUGIN_GOSTARTGAME,
+    PLUGIN_GOSTARTGAMETEXT,
 
     CONFIG_ACTIVATED,
     CONFIG_DISABLED,
@@ -25,15 +29,25 @@ public enum Lang {
     CONFIG_GUI_ITEMBACK,
 
     CONFIG_GUI_SETTINGS_NAME,
-    CONFIG_GUI_SETTINGS_ITEM,
     CONFIG_GUI_SETTINGS_TABHEALTH,
     CONFIG_GUI_SETTINGS_BONUSCHEST,
+    CONFIG_GUI_SETTINGS_SAMELOOTINCHEST,
     CONFIG_GUI_SETTINGS_AUTOSMELT,
     CONFIG_GUI_SETTINGS_AUTOSMELTFORTUNE,
     CONFIG_GUI_SETTINGS_FRIENDLYFIRE,
     CONFIG_GUI_SETTINGS_UHCMODE,
     CONFIG_GUI_SETTINGS_EXPMULTIPLIER,
     CONFIG_GUI_SETTINGS_RANDOMTEAM,
+
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_TABHEALTH,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_BONUSCHEST,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_SAMELOOTINCHEST,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_AUTOSMELT,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_AUTOSMELTFORTUNE,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_FRIENDLYFIRE,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_UHCMODE,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_EXPMULTIPLIER,
+    CONFIG_GUI_SETTINGS_DESCRIPTIONS_RANDOMTEAM,
 
     CONFIG_GUI_TIMERS_NAME,
     CONFIG_GUI_TIMERS_ITEM,
@@ -51,7 +65,7 @@ public enum Lang {
 
     CONFIG_GUI_CONFIGS_NAME,
     CONFIG_GUI_CONFIGS_ITEM,
-    CONFIG_GUI_CONFIGS_SAVEPROFILE,
+    CONFIG_GUI_CONFIGS_PRESETSAVE,
     CONFIG_GUI_CONFIGS_PRESETSAVED,
     CONFIG_GUI_CONFIGS_PRESETLOADED,
     CONFIG_GUI_CONFIGS_PRESETFAILED,
@@ -69,6 +83,19 @@ public enum Lang {
 
     COMMANDS_CANBUILD_ACTIVATED,
     COMMANDS_CANBUILD_DISABLED,
+    COMMANDS_BLOCKEDINCOMBAT_VERSION,
+    COMMANDS_BLOCKEDINCOMBAT_CREATEDBY,
+    COMMANDS_DEVMODE_TEXT,
+    COMMANDS_DEVMODE_ACTIVATE,
+    COMMANDS_DEVMODE_DISABLE,
+    COMMANDS_STATS_TEXT,
+    COMMANDS_STATS_TIMEPLAYED,
+    COMMANDS_STATS_WINS,
+    COMMANDS_STATS_LOSTS,
+    COMMANDS_STATS_KILLS,
+    COMMANDS_STATS_DEATHS,
+    COMMANDS_STATS_CANTFINDDATA,
+    COMMANDS_STATS_NOTENABLED,
 
     GAMESTATE_LEAVEAREA,
     GAMESTATE_GAMESTARTEDCANCEL,
@@ -89,6 +116,7 @@ public enum Lang {
     TEAMS_GREEN,
     TEAMS_SPECTATOR,
     TEAMS_JOINMSG,
+    TEAMS_NOTINTEAM,
     TEAMS_ITEM,
 
     SCOREBOARD_TIME,
@@ -103,19 +131,25 @@ public enum Lang {
     private static final Map<Lang, String> VALUES = new HashMap<>();
 
     static{
+        reload();
+    }
+
+    public static void reload(){
+        FileConfiguration config = Files.LANG.getConfig();
+        VALUES.clear();
         for (Lang lang : values()){
-            VALUES.put(lang, lang.getFromFile());
+            VALUES.put(lang, lang.getFromFile(config));
         }
 
-        Main.getInstance().logger.info("["+Main.getInstance().getPrefixDefault()+"] Lang file read successfully!");
+        Main main = Main.getInstance();
+        main.getLogger().info(main.getPrefix(true)+"Lang file read successfully!");
     }
 
     public String get(){
         return VALUES.get(this);
     }
 
-    private String getFromFile(){
-        FileConfiguration config = Files.LANG.getConfig();
+    private String getFromFile(FileConfiguration config){
         String key = name().replace('_','.').toLowerCase();
         String value = config.getString(key);
 

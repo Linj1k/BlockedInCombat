@@ -12,9 +12,9 @@ import java.text.SimpleDateFormat;
 
 public class Game extends BukkitRunnable {
     protected final Main main = Main.getInstance();
-    private int gameTime = 0;
-    private int pvpTime = 0;
-    private int glowingTime = 0;
+    private int gameTime;
+    private int pvpTime;
+    private int glowingTime;
     private boolean showGlowing = false;
 
     public Game() {

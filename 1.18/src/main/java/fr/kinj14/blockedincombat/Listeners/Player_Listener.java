@@ -1,8 +1,7 @@
 package fr.kinj14.blockedincombat.Listeners;
 
+import fr.kinj14.blockedincombat.Data.PlayerData;
 import fr.kinj14.blockedincombat.Enums.Lang;
-import fr.kinj14.blockedincombat.Library.InventoryUtils;
-import fr.kinj14.blockedincombat.Library.ItemsUtils;
 import fr.kinj14.blockedincombat.Main;
 import fr.kinj14.blockedincombat.Manager.DelayManager;
 import fr.kinj14.blockedincombat.Enums.GameState;
@@ -27,16 +26,19 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public class Player_Listener implements Listener {
     protected final Main main = Main.getInstance();
 
-    private ItemsUtils ItemsUtils = new ItemsUtils();
-    private DelayManager delayManager = new DelayManager();
+    private final DelayManager delayManager = new DelayManager();
 
     @EventHandler
     public void OnJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         event.setJoinMessage(main.getPrefix()+Lang.PLUGIN_JOINMSG.get().replace("{player}", player.getName()));
+
+        main.getPlayerManager().loadPlayerData(player);
 
         PlayerManager.setupLobby(player);
 
@@ -53,6 +55,14 @@ public class Player_Listener implements Listener {
     public void OnQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        UUID uuid = player.getUniqueId();
+        if(main.getPlayerManager().getPlayersStats().containsKey(uuid)){
+            PlayerData playerData = main.getPlayerManager().getPlayersStats().get(uuid);
+            playerData.TimePlayed = PlayerManager.getTimePlayed(player);
+            playerData.saveData(PlayerManager.getPlayerDataPath(uuid));
+            main.getLogger().info(main.getPrefix(true)+" Save of "+player.getName()+"("+uuid.toString()+")'s data");
+        }
+
         event.setQuitMessage(main.getPrefix()+Lang.PLUGIN_LEAVEMSG.get().replace("{player}", player.getName()));
         
         main.getTeamsManager().removePlayerInTeam(player, main.getTeamsManager().getPlayerTeam(player));
@@ -61,9 +71,7 @@ public class Player_Listener implements Listener {
 
         main.getScoreboardManager().updatePlayersAll(String.valueOf(Bukkit.getOnlinePlayers().size()-1));
 
-        if(main.getPlayersBuild().contains(player)){
-            main.getPlayersBuild().remove(player);
-        }
+        main.getPlayersBuild().remove(player);
 
         main.CheckWin();
     }
@@ -122,7 +130,7 @@ public class Player_Listener implements Listener {
         }
 
         if((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) && item != null && item.hasItemMeta()){
-            if(ItemsUtils.BlockIsWool(item.getType())){
+            if(main.itemsUtils.BlockIsWool(item.getType())){
                 for(Teams team : Teams.values()){
                     if(item.getItemMeta().getDisplayName().contains(team.getName())){
                         main.getTeamsManager().switchPlayer(player, team);
@@ -163,7 +171,7 @@ public class Player_Listener implements Listener {
 
             player.openInventory(inv);
 
-            InventoryUtils.updateInventory(main, player, target.getDisplayName());
+            //InventoryUtils.updateInventory(main, player, "Test");
         }
     }
 

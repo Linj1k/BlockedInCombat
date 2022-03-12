@@ -47,27 +47,32 @@ public class GUI_Blocks extends GUI {
                 final ItemStack item = inventory.getItem(event.getSlot());
 
                 if (item != null) {
+                    ItemMeta meta = item.getItemMeta();
                     if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-                        ItemMeta meta = item.getItemMeta();
-                        for(Map.Entry<Material, Boolean> block : this.settings.getBlocks().entrySet()){
-                            if (meta.getDisplayName().equalsIgnoreCase(block.getKey().name())) {
-                                this.settings.getBlocks().replace(block.getKey(), !block.getValue());
-                            }
-                        }
-
                         if (meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_ITEMBACK.get())) {
                             player.closeInventory();
                             main.getGuiManager().getSettings().open(player);
-                        }
 
-                        this.updateInventory();
-                        event.setCancelled(true);
-                        return;
+                            event.setCancelled(true);
+                            return;
+                        }
                     }
+
+                    for(Map.Entry<Material, Boolean> block : this.settings.getBlocks().entrySet()){
+                        if (item.getType().name().equalsIgnoreCase(block.getKey().name())) {
+                            this.settings.getBlocks().replace(block.getKey(), !block.getValue());
+                            break;
+                        }
+                    }
+
+                    this.updateInventory();
                 }
             } else {
                 player.sendMessage(main.getPrefix()+ Lang.PLUGIN_NOPERMISSION.get());
             }
+
+            event.setCancelled(true);
+            return;
         }
     }
 
@@ -76,7 +81,7 @@ public class GUI_Blocks extends GUI {
         Inventory menu = this.inventory;
 
         for(Map.Entry<Material, Boolean> block : main.getSettingsManager().getConfig().getBlocks().entrySet()){
-            ItemStack blockItem = ItemsManager.buildItemstack(new ItemStack(block.getKey(), 1), block.getKey().name(), new ArrayList<>(Collections.singletonList(String.valueOf(
+            ItemStack blockItem = ItemsManager.buildItemstack(new ItemStack(block.getKey(), 1), "null", new ArrayList<>(Collections.singletonList(String.valueOf(
                     SettingsManager.booleanToString(block.getValue())
             ))));
 

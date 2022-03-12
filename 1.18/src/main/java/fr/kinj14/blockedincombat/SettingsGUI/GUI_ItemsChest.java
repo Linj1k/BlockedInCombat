@@ -49,25 +49,30 @@ public class GUI_ItemsChest extends GUI {
                 if (item != null) {
                     if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
                         ItemMeta meta = item.getItemMeta();
-                        for(Map.Entry<Material, Boolean> it : this.settings.getItems().entrySet()){
-                            if (meta.getDisplayName().equalsIgnoreCase(it.getKey().name())) {
-                                this.settings.getItems().replace(it.getKey(), !it.getValue());
-                            }
-                        }
 
                         if (meta.getDisplayName().equalsIgnoreCase(Lang.CONFIG_GUI_ITEMBACK.get())) {
                             player.closeInventory();
                             main.getGuiManager().getSettings().open(player);
-                        }
 
-                        this.updateInventory();
-                        event.setCancelled(true);
-                        return;
+                            return;
+                        }
                     }
+
+                    for(Map.Entry<Material, Boolean> it : this.settings.getItems().entrySet()){
+                        if (item.getType().name().equalsIgnoreCase(it.getKey().name())) {
+                            this.settings.getItems().replace(it.getKey(), !it.getValue());
+                            break;
+                        }
+                    }
+
+                    this.updateInventory();
                 }
             } else {
                 player.sendMessage(main.getPrefix()+ Lang.PLUGIN_NOPERMISSION.get());
             }
+
+            event.setCancelled(true);
+            return;
         }
     }
 
@@ -76,7 +81,7 @@ public class GUI_ItemsChest extends GUI {
         Inventory menu = this.inventory;
 
         for(Map.Entry<Material, Boolean> item : main.getSettingsManager().getConfig().getItems().entrySet()){
-            ItemStack itemItem = ItemsManager.buildItemstack(new ItemStack(item.getKey(), 1), item.getKey().name(), new ArrayList<>(Collections.singletonList(String.valueOf(
+            ItemStack itemItem = ItemsManager.buildItemstack(new ItemStack(item.getKey(), 1), "null", new ArrayList<>(Collections.singletonList(String.valueOf(
                     SettingsManager.booleanToString(item.getValue())
             ))));
 

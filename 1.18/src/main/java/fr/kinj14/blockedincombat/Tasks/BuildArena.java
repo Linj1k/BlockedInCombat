@@ -11,11 +11,11 @@ import java.text.SimpleDateFormat;
 
 public class BuildArena extends BukkitRunnable {
     protected final Main main = Main.getInstance();
-    private int timer = 48;
+    private int timer;
 
     public BuildArena() {
         if(main.getSettingsManager().getConfig().getArenaDelay()){
-            this.timer = 48;
+            this.timer = 12;
         } else {
             this.timer = 6;
         }
@@ -31,20 +31,21 @@ public class BuildArena extends BukkitRunnable {
 
         timer--;
 
-        for(Player pls : Bukkit.getOnlinePlayers()) {
-            String timerdate = new SimpleDateFormat(Lang.PLUGIN_TIMERFORMAT.get()).format(timer*1000);
-            main.getScoreboardManager().updateTime(pls, timerdate);
-            pls.setLevel(timer);
-        }
-
-        if(timer == 5 || timer == 3 || timer == 2 || timer == 1) {
-            Bukkit.broadcastMessage(main.getPrefix()+ Lang.GAMESTATE_GAMESTART.get().replace("{time}", String.valueOf(timer)));
-        }
-
         if(timer == 0) {
             main.getArenaManager().finishArea();
             main.StartGame();
             cancel();
+            return;
+        }
+
+        for(Player pls : Bukkit.getOnlinePlayers()) {
+            String timerDate = new SimpleDateFormat(Lang.PLUGIN_TIMERFORMAT.get()).format(timer*1000);
+            main.getScoreboardManager().updateTime(pls, timerDate);
+            pls.setLevel(timer);
+            if(timer <= 5) {
+                pls.sendMessage(main.getPrefix()+ Lang.GAMESTATE_GAMESTART.get().replace("{time}", String.valueOf(timer)));
+                pls.sendTitle(String.valueOf(timer),"",0,40,0);
+            }
         }
     }
 }
