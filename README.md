@@ -1,7 +1,8 @@
 # BlockedInCombat
 > This is a resumption of the blockedincombat map of PingiPuck but in Minecraft plugin :p
 
-* Test Server: BLOCKEDINCOMBAT.LCMC.PRO
+# Servers (send me a pm to add your server to the list):
+  - BLOCKEDINCOMBAT.LCMC.PRO
 
 ```
 The next step would be to support from 1.8 to 1.18,
