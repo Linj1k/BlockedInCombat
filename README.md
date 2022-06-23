@@ -5,10 +5,11 @@
   - BLOCKEDINCOMBAT.LCMC.PRO
 
 ```
-The next step would be to support from 1.8 to 1.18,
+The next step would be to support from 1.8 to Last version,
 if you think you can help me don't hesitate to make pull requests
 
 07/03/2022: I tested from 1.13 to 1.18 and everything works!
+23/03/2022: Update to 1.19
 ```
 Information for devs: [Wiki](https://github.com/Linj1k/BlockedInCombat/wiki/For-Dev)
 
