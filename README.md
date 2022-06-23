@@ -18,7 +18,7 @@ PingiPuck:
 
 Links:
   - Spigot: https://www.spigotmc.org/resources/blockedincombat.79717/
-  - Map: https://github.com/Linj1k/BlockedInCombat/blob/master/world.rar
+  - Map: https://github.com/Linj1k/BlockedInCombat/blob/master/world.rar?raw=true
   - bStats: https://bstats.org/plugin/bukkit/blockedincombat/7741
 
 [![](/bic.png)](https://www.spigotmc.org/resources/blockedincombat.79717/)
