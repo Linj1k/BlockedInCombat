@@ -2,7 +2,7 @@
 > This is a resumption of the blockedincombat map of PingiPuck but in Minecraft plugin :p
 
 # Servers (send me a pm to add your server to the list):
-  - BLOCKEDINCOMBAT.LCMC.PRO
+  - **
 
 ```
 The next step would be to support from 1.8 to Last version,
@@ -19,7 +19,7 @@ PingiPuck:
 
 Links:
   - Spigot: https://www.spigotmc.org/resources/blockedincombat.79717/
-  - Map: https://github.com/Linj1k/BlockedInCombat/blob/master/world.rar?raw=true
+  - Map: [world.rar](https://github.com/Linj1k/BlockedInCombat/blob/master/world.rar?raw=true) or [world.zip](https://github.com/Linj1k/BlockedInCombat/blob/master/world.zip?raw=true)
   - bStats: https://bstats.org/plugin/bukkit/blockedincombat/7741
 
 [![](/bic.png)](https://www.spigotmc.org/resources/blockedincombat.79717/)
